@@ -1,7 +1,5 @@
 <template>
   <el-container>
-    <!-- <el-page-header @back="goBack" content="详情页面">
-    </el-page-header> -->
     <el-header>高鐵查詢系統</el-header>
 
     <el-main>
@@ -35,9 +33,6 @@ export default {
     byStation
   },
   methods: {
-    goBack() {
-      console.log('go back')
-    }
   }
 }
 </script>

@@ -100,7 +100,7 @@ import {getDailyTimetable} from '@/api/thrs-api'
 export default {
   data() {
     var validateArriveAndDeparture = (rule, value, callback) => {
-      console.log('value:', value)
+      // console.log('value:', value)
       if (this.form.fromStation === this.form.toStation) {
         callback(new Error('起訖站不可以相同'))
       } else {
@@ -205,12 +205,10 @@ export default {
       })
       this.index = this.timetable.findIndex(el => {
         if(this.form.arrive) {
-          console.log('a')
           const expectTime = new Date('1970/01/01 ' + datetime[1])
           const arrivalTime = new Date('1970/01/01 ' + el.DestinationStopTime.ArrivalTime)
           return arrivalTime > expectTime
         } else {
-          console.log('b', datetime[1], el.OriginStopTime.DepartureTime)
           const expectTime = new Date('1970/01/01 ' + datetime[1])
           const departureTime = new Date('1970/01/01 ' + el.OriginStopTime.DepartureTime)
           return departureTime > expectTime
@@ -220,9 +218,6 @@ export default {
     resetForm() {
       // console.log('clear', this.$refs['form'])
       this.$refs['form'].resetFields()
-    },
-    test() {
-      console.log('test')
     }
   }
 }
