@@ -48,30 +48,12 @@
                 </template>
               </el-table-column>
             </el-table>
-            <!-- <el-form label-position="left" class="demo-table-expand">
-              <el-form-item
-                v-for="(station, i) in props.row.StopStations"
-                :key="i"
-                label="前往">
-                <span>{{ station.StationName.Zh_tw }}；</span>
-                <span>標準席：{{ station.StandardSeatStatus | seatAvailable }}；</span>
-                <span>商務席：{{ station.BusinessSeatStatus | seatAvailable }}</span>
-              </el-form-item>
-            </el-form> -->
           </template>
         </el-table-column>
         <el-table-column
           label="車次"
           prop="TrainNo">
         </el-table-column>
-        <!-- <el-table-column
-          label="商品名称"
-          prop="name">
-        </el-table-column>
-        <el-table-column
-          label="描述"
-          prop="desc">
-        </el-table-column> -->
       </el-table>
     </el-card>
   </div>
@@ -79,8 +61,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
-// import {getAvailableSeatStatusList} from '@/api/thrs-api'
-import json from './res'
+import {getAvailableSeatStatusList} from '@/api/thrs-api'
 
 export default {
   data() {
