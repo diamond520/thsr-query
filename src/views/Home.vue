@@ -39,5 +39,9 @@ export default {
 </script>
 
 <style lang="scss">
-
+  .el-header {
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: 500;
+  }
 </style>
