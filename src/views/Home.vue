@@ -12,7 +12,9 @@
         <el-tab-pane label="班次停靠站查詢">
           <byTrainNo></byTrainNo>
         </el-tab-pane>
-        <el-tab-pane label="車站座位查詢">角色管理</el-tab-pane>
+        <el-tab-pane label="車站座位查詢">
+          <byStation></byStation>
+        </el-tab-pane>
       </el-tabs>
     </el-main>
   </el-container>
@@ -23,12 +25,14 @@
 // import test from '@/components/test.vue'
 import byTime from '@/components/byTime.vue'
 import byTrainNo from '@/components/byTrainNo.vue'
+import byStation from '@/components/byStation.vue'
 export default {
   name: 'Home',
   components: {
     // test,
     byTime,
-    byTrainNo
+    byTrainNo,
+    byStation
   },
   methods: {
     goBack() {
