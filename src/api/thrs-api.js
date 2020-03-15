@@ -27,3 +27,10 @@ export function getGeneralTimetablebyTrainNo(TrainNo) {
     method: 'get'
   })
 }
+
+export function getAvailableSeatStatusList(StationID) {
+  return request({
+    url: `/AvailableSeatStatusList/${StationID}`,
+    method: 'get'
+  })
+}
