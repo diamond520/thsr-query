@@ -13,3 +13,17 @@ export function getDailyTimetable({OriginStationID, DestinationStationID, TrainD
     method: 'get'
   })
 }
+
+export function getGeneralTimetable() {
+  return request({
+    url: `/GeneralTimetable?top=300`,
+    method: 'get'
+  })
+}
+
+export function getGeneralTimetablebyTrainNo(TrainNo) {
+  return request({
+    url: `/GeneralTimetable/TrainNo/${TrainNo}?top=1`,
+    method: 'get'
+  })
+}
