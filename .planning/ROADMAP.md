@@ -12,7 +12,7 @@ Four phases build from a secure API foundation outward to a fully polished query
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - 建立 Next.js 專案、TDX OAuth2 token 管理、安全 API proxy 架構
+- [x] **Phase 1: Foundation** - 建立 Next.js 專案、TDX OAuth2 token 管理、安全 API proxy 架構
 - [ ] **Phase 2: Core Query** - 完整的「依時間查詢」主流程（時刻表 + 座位狀態 + 訂票連結）
 - [ ] **Phase 3: Secondary Queries** - 依車次號查詢、依車站查詢座位剩餘
 - [ ] **Phase 4: UI Polish** - 視覺化車站選擇器與漸進式 UX 強化
@@ -32,8 +32,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Next.js 16 scaffold: archive Vue 2, create-next-app, shadcn/ui, QueryClientProvider layout
-- [ ] 01-02-PLAN.md — TDX security layer: types, mock fixtures, server-only token manager, tdx-api helper, /api/tdx/stations Route Handler
-- [ ] 01-03-PLAN.md — Vercel deployment: CLI deploy, credential setup docs, end-to-end human verification
+- [x] 01-02-PLAN.md — TDX security layer: types, mock fixtures, server-only token manager, tdx-api helper, /api/tdx/stations Route Handler
+- [x] 01-03-PLAN.md — Vercel deployment: CLI deploy, credential setup docs, end-to-end human verification
 
 ### Phase 2: Core Query
 **Goal**: 使用者可以選擇起訖站與日期，看到當日所有班次的時刻與座位狀態，並直接點擊前往官方訂票頁
@@ -85,7 +85,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | In Progress|  |
+| 1. Foundation | 3/3 | Complete | 2026-02-19 |
 | 2. Core Query | 0/3 | Not started | - |
 | 3. Secondary Queries | 0/2 | Not started | - |
 | 4. UI Polish | 0/1 | Not started | - |

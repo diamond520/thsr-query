@@ -28,7 +28,7 @@
 ### 基礎架構
 
 - [x] **INFR-01**: Next.js 16（App Router）+ TypeScript 專案架構
-- [ ] **INFR-02**: 可部署至 Vercel，環境變數設定於 Vercel dashboard
+- [x] **INFR-02**: 可部署至 Vercel，環境變數設定於 Vercel dashboard
 
 ## v2 Requirements
 
@@ -56,7 +56,7 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | INFR-01 | Phase 1 | Complete (01-01) |
-| INFR-02 | Phase 1 | Pending |
+| INFR-02 | Phase 1 | Complete |
 | INTG-01 | Phase 1 | Complete |
 | INTG-02 | Phase 1 | Complete |
 | INTG-03 | Phase 1 | Complete |
