@@ -22,6 +22,7 @@ import {
 import { cn } from '@/lib/utils'
 import { getTaiwanToday } from '@/lib/taiwan-date'
 import type { TdxStation } from '@/types/tdx'
+import { StationLinePicker } from '@/components/station-line-picker'
 
 export interface QueryParams {
   origin: string       // TDX StationID e.g. "1"
@@ -74,8 +75,20 @@ export function QueryForm({ onSubmit }: QueryFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      {/* Row 1: Origin [Swap] Destination — side by side on all screen sizes */}
-      <div className="flex items-center gap-2">
+      {/* Mobile: visual line picker (md:hidden) */}
+      <div className="md:hidden">
+        <StationLinePicker
+          stations={stations}
+          origin={origin}
+          destination={destination}
+          onOriginChange={setOrigin}
+          onDestinationChange={setDestination}
+          disabled={stationsLoading}
+        />
+      </div>
+
+      {/* Desktop: original Select row (hidden on mobile) */}
+      <div className="hidden md:flex items-center gap-2">
         {/* Origin station select */}
         <Select value={origin} onValueChange={setOrigin} disabled={stationsLoading}>
           <SelectTrigger className="flex-1 min-w-0">
