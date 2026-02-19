@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - 建立 Next.js 專案、TDX OAuth2 token 管理、安全 API proxy 架構
 - [x] **Phase 2: Core Query** - 完整的「依時間查詢」主流程（時刻表 + 座位狀態 + 訂票連結）
 - [x] **Phase 3: Secondary Queries** - 依車次號查詢、依車站查詢座位剩餘 (completed 2026-02-19)
-- [ ] **Phase 4: UI Polish** - 視覺化車站選擇器與漸進式 UX 強化
+- [x] **Phase 4: UI Polish** - 視覺化車站選擇器與漸進式 UX 強化 (completed 2026-02-19)
 
 ## Phase Details
 
@@ -64,8 +64,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Types/mock/tdx-api extensions + /api/tdx/timetable-by-train Route Handler + ByTrainForm + ByTrainResult
-- [ ] 03-02-PLAN.md — /api/tdx/seat-status Route Handler + ByStationForm + ByStationResult + page.tsx three-tab integration
+- [x] 03-01-PLAN.md — Types/mock/tdx-api extensions + /api/tdx/timetable-by-train Route Handler + ByTrainForm + ByTrainResult
+- [x] 03-02-PLAN.md — /api/tdx/seat-status Route Handler + ByStationForm + ByStationResult + page.tsx three-tab integration
 
 ### Phase 4: UI Polish
 **Goal**: 視覺化車站選擇器取代下拉選單，整體體驗達到 t-ex app 風格的流暢度與可用性
@@ -77,7 +77,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 04-01-PLAN.md — 視覺化線路圖車站選擇元件（mobile）+ QueryForm 響應式整合
+- [x] 04-01-PLAN.md — 視覺化線路圖車站選擇元件（mobile）+ QueryForm 響應式整合
 
 ## Progress
 
@@ -89,4 +89,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation | 3/3 | Complete | 2026-02-19 |
 | 2. Core Query | 4/4 | Complete | 2026-02-19 |
 | 3. Secondary Queries | 2/2 | Complete | 2026-02-19 |
-| 4. UI Polish | 0/1 | Not started | - |
+| 4. UI Polish | 1/1 | Complete | 2026-02-19 |

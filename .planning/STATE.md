@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** 使用者能在幾秒內查到自己要搭的那班車有沒有位置。
-**Current focus:** Phase 3 — Real API Integration
+**Current focus:** Phase 4 — UI Polish
 
 ## Current Position
 
-Phase: 3 of 4 (Secondary Queries) — COMPLETE
-Plan: 2 of 2 in current phase — COMPLETE
-Status: Phase 3 complete — all three query modes (by-OD, by-train, by-station) built and integrated into page.tsx with top-level shadcn Tabs
-Last activity: 2026-02-19 — Completed 03-02 (by-station query + three-tab mode integration)
+Phase: 4 of 4 (UI Polish) — COMPLETE
+Plan: 1 of 1 in current phase — COMPLETE
+Status: Phase 4 complete — mobile visual station line picker built and integrated into QueryForm with CSS breakpoint swap
+Last activity: 2026-02-19 — Completed 04-01 (mobile StationLinePicker + QueryForm integration)
 
-Progress: [█████████░] 75%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -30,9 +30,10 @@ Progress: [█████████░] 75%
 | 01-foundation | 3/3 | 16 min | 5.3 min |
 | 02-core-query | 4/4 | 13 min | 3.3 min |
 | 03-secondary-queries | 2/2 | 6 min | 3 min |
+| 04-ui-polish | 1/1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 3 min, 2 min, 5 min, 4 min, 2 min
+- Last 5 plans: 2 min, 3 min, 2 min, 5 min, 4 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -75,6 +76,10 @@ Recent decisions affecting current work:
 - [03-02]: page.tsx top-level Tabs defaultValue="by-od" — Phase 2 behavior unchanged on load; each tab has independent local state
 - [03-02]: ByStationForm reuses queryKey=['stations'] — shares React Query cache with QueryForm (no duplicate station fetches)
 - [03-02]: TrainSeatRow matches queried stationId against StopStations — correctly shows seat status for the queried station leg
+- [04-01]: CSS-only breakpoints (md:hidden / hidden md:flex) for mobile/desktop swap — avoids hydration mismatch, no useMediaQuery JS hook
+- [04-01]: Mobile picker has no swap button — tapping any station when both are selected clears and restarts; swap is desktop-only
+- [04-01]: getStationState is a pure function outside the component — no closure over state, cleaner logic
+- [04-01]: useEffect watches [origin, destination] to reset step to 'origin' when origin is cleared externally (swap-then-continue edge case)
 
 ### Pending Todos
 
@@ -89,5 +94,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 03-02-PLAN.md (by-station query + three-tab mode integration — all Phase 3 complete)
+Stopped at: Completed 04-01-PLAN.md (mobile StationLinePicker + QueryForm integration — all Phase 4 complete)
 Resume file: None
