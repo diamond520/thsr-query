@@ -124,12 +124,17 @@ Plans:
   2. 回程日期選擇器自動禁用早於去程日期的日期，避免使用者選到無效組合
   3. 提交查詢後，去程與回程班次列表同時顯示；手機版上下堆疊、桌面版左右並排（`md:grid-cols-2`）
   4. 每段班次均顯示完整時刻、行車時間、座位狀態（標準席 / 商務席）及「去訂票」連結，功能與單程查詢一致
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — RoundTripParams type + RoundTripForm component (station picker + two date pickers with return-date constraint)
+- [ ] 07-02-PLAN.md — RoundTripResult component (dual parallel React Query with discriminated keys, responsive two-column layout)
+- [ ] 07-03-PLAN.md — page.tsx fourth tab wiring + next build + human verification
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -138,5 +143,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Secondary Queries | 2/2 | Complete | 2026-02-19 |
 | 4. UI Polish | 1/1 | Complete | 2026-02-19 |
 | 5. Shareable URL | 2/2 | Complete    | 2026-02-19 |
-| 6. Saved Favorite Routes | 2/3 | In Progress|  |
-| 7. Round-Trip Query | 0/TBD | Not started | - |
+| 6. Saved Favorite Routes | 3/3 | Complete | 2026-02-19 |
+| 7. Round-Trip Query | 0/3 | Not started | - |
