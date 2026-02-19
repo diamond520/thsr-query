@@ -9,28 +9,29 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation) — COMPLETE
-Plan: 3 of 3 in current phase — ALL COMPLETE
-Status: Phase 1 complete, ready for Phase 2
-Last activity: 2026-02-19 — Completed 01-03 (Vercel deployment, end-to-end verification)
+Phase: 2 of 4 (Core Query) — IN PROGRESS
+Plan: 1 of 4 in current phase — COMPLETE
+Status: Phase 2 plan 02-01 complete — data layer ready, unblocks 02-02, 02-03, 02-04
+Last activity: 2026-02-19 — Completed 02-01 (/api/tdx/trains route handler + TdxEnrichedTrain types)
 
-Progress: [███░░░░░░░] 25%
+Progress: [████░░░░░░] 31%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 5.3 min
-- Total execution time: 16 min
+- Total plans completed: 4
+- Average duration: 4.5 min
+- Total execution time: 19 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 3/3 | 16 min | 5.3 min |
+| 02-core-query | 1/4 | 3 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 8 min, 3 min, 5 min
+- Last 5 plans: 8 min, 3 min, 5 min, 3 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -55,6 +56,10 @@ Recent decisions affecting current work:
 - [01-03]: Vercel deployment non-blocking for Phase 2 — proceed even if deployment blocked
 - [01-03]: TDX credentials set in Vercel Dashboard (Production + Preview), not in .env.local (dev only)
 - [01-03]: Mock mode confirmed functional in production without env vars set on Vercel
+- [02-01]: Route Handler imports MOCK_TRAINS directly from fixtures — tdx-api.ts does not re-export it (single responsibility)
+- [02-01]: fetchDailyTrains/fetchSeatStatus have no mock-mode handling — mock short-circuit lives only in route.ts
+- [02-01]: seatMap keyed on TrainNo with timetable as left dataset — AvailableSeatStatusList returns ALL station trains
+- [02-01]: null (not undefined) for absent seat status — enables clean '—' display fallback in UI components
 
 ### Pending Todos
 
@@ -69,5 +74,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-03-PLAN.md (Vercel deployment at https://thsr-query.vercel.app, human end-to-end verification passed)
+Stopped at: Completed 02-01-PLAN.md (TDX trains data layer: /api/tdx/trains route handler + TdxEnrichedTrain types + MOCK_TRAINS fixture)
 Resume file: None

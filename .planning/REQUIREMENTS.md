@@ -7,8 +7,8 @@
 
 ### 查詢功能
 
-- [ ] **QURY-01**: 使用者可選擇起站、訖站與日期查詢當日所有高鐵班次時刻
-- [ ] **QURY-02**: 時刻表每一列班次直接顯示標準席和商務席的座位剩餘狀態（充足/有限/售完）
+- [x] **QURY-01**: 使用者可選擇起站、訖站與日期查詢當日所有高鐵班次時刻
+- [x] **QURY-02**: 時刻表每一列班次直接顯示標準席和商務席的座位剩餘狀態（充足/有限/售完）
 - [ ] **QURY-03**: 使用者可輸入車次號查詢單一列車的停站與時刻表
 - [ ] **QURY-04**: 時刻表每一列班次顯示「去訂票」連結，點擊後跳至高鐵官方訂票頁面
 
@@ -60,8 +60,8 @@
 | INTG-01 | Phase 1 | Complete |
 | INTG-02 | Phase 1 | Complete |
 | INTG-03 | Phase 1 | Complete |
-| QURY-01 | Phase 2 | Pending |
-| QURY-02 | Phase 2 | Pending |
+| QURY-01 | Phase 2 | Complete |
+| QURY-02 | Phase 2 | Complete |
 | QURY-04 | Phase 2 | Pending |
 | UIUX-02 | Phase 2 | Pending |
 | UIUX-03 | Phase 2 | Pending |
