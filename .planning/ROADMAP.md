@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: UI Polish** - 視覺化車站選擇器與漸進式 UX 強化 (completed 2026-02-19)
 - [x] **Phase 5: Shareable URL** - 查詢條件寫入 URL query string，開啟連結即自動帶入並執行查詢 (completed 2026-02-19)
 - [ ] **Phase 6: Saved Favorite Routes** - localStorage 儲存常用起訖站組合，一鍵帶入查詢
-- [ ] **Phase 7: Round-Trip Query** - 新增「來回查詢」分頁，去回程各自選日期，並排顯示兩段班次
+- [x] **Phase 7: Round-Trip Query** - 新增「來回查詢」分頁，去回程各自選日期，並排顯示兩段班次 (completed 2026-02-19)
 
 ## Phase Details
 
@@ -144,4 +144,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 4. UI Polish | 1/1 | Complete | 2026-02-19 |
 | 5. Shareable URL | 2/2 | Complete    | 2026-02-19 |
 | 6. Saved Favorite Routes | 3/3 | Complete | 2026-02-19 |
-| 7. Round-Trip Query | 2/3 | In Progress|  |
+| 7. Round-Trip Query | 3/3 | Complete   | 2026-02-19 |

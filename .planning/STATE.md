@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 7 — Round-Trip Query
-Plan: 2 of 3 complete
-Status: In Progress
-Last activity: 2026-02-19 — 07-02 complete (RoundTripResult component with dual parallel queries)
+Plan: 3 of 3 complete
+Status: Complete
+Last activity: 2026-02-19 — 07-03 complete (wire fourth tab + human verification of round-trip query end-to-end)
 
-Progress: [=======   ] 78% (v2.0 milestone — 2/3 plans in Phase 7 done)
+Progress: [==========] 100% (v2.0 milestone — all 7 phases complete)
 
 ## Performance Metrics
 
@@ -33,7 +33,7 @@ Progress: [=======   ] 78% (v2.0 milestone — 2/3 plans in Phase 7 done)
 | 04-ui-polish | 1/1 | 2 min | 2 min |
 | 05-shareable-url | 2/2 | 2 min | 1 min |
 | 06-saved-favorite-routes | 3/3 | ~18 min | 6 min |
-| 07-round-trip-query | 2/3 | 3 min | 1.5 min |
+| 07-round-trip-query | 3/3 | 5 min | 1.7 min |
 
 **Recent Trend:**
 - Last 5 plans: 5 min, 4 min, 1 min, 1 min, 2 min
@@ -114,6 +114,8 @@ Recent decisions affecting current work:
 - [Phase 07-02]: LegDisplay is internal (not exported) — only RoundTripResult is the public API surface
 - [Phase 07-02]: Discriminated queryKey literals ('outbound'/'return') mandatory — without them React Query deduplicates structurally-identical params
 - [Phase 07-02]: Return leg swaps origin/destination AND uses returnDate — both critical correctness requirements
+- [Phase 07-03]: Two-character Chinese labels (時間/車次/車站/來回) prevent overflow on 320px viewports — tab extension pattern
+- [Phase 07-03]: roundTripParams state lives in page.tsx — consistent with existing per-tab state pattern (queryParams/byTrainParam/byStationParam)
 
 ### Pending Todos
 
@@ -129,5 +131,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 07-02-PLAN.md — RoundTripResult component with dual parallel queries; Phase 7 plan 2/3 done
+Stopped at: Completed 07-03-PLAN.md — wire fourth tab + human verification; Phase 7 complete; Milestone v2.0 UX Enhancement fully shipped
 Resume file: None
