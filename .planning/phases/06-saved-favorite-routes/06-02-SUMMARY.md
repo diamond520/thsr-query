@@ -67,7 +67,7 @@ Each task was committed atomically:
 1. **Task 1: Create FavoriteRouteChips component** - `6bb5440` (feat)
 2. **Task 2: Extend QueryForm with save button** - `29b698a` (feat)
 
-**Plan metadata:** TBD (docs: complete plan)
+**Plan metadata:** `c722e3a` (docs: complete plan)
 
 ## Files Created/Modified
 - `src/components/favorite-route-chips.tsx` - Chip list rendering FavoriteRoute items; apply on chip click, delete on X button with stopPropagation
@@ -92,6 +92,15 @@ None - no external service configuration required.
 - FavoriteRouteChips and extended QueryForm are ready for wiring in page.tsx (Plan 03)
 - Both components are pure presentational — all state and callbacks come from props, easily testable
 - Plan 03 wires useFavorites hook (Plan 01) with these components (Plan 02) in page.tsx
+
+## Self-Check: PASSED
+
+- FOUND: src/components/favorite-route-chips.tsx
+- FOUND: src/components/query-form.tsx
+- FOUND: .planning/phases/06-saved-favorite-routes/06-02-SUMMARY.md
+- FOUND commit: 6bb5440 (Task 1)
+- FOUND commit: 29b698a (Task 2)
+- FOUND commit: c722e3a (docs metadata)
 
 ---
 *Phase: 06-saved-favorite-routes*
