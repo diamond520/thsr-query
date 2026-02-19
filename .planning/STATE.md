@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 5 — Shareable URL
-Plan: —
-Status: Planning
-Last activity: 2026-02-19 — v2.0 roadmap created (Phases 5–7)
+Plan: 1 of 2 complete
+Status: In Progress
+Last activity: 2026-02-19 — 05-01 complete (SearchParamsInit + QueryForm initial* props)
 
-Progress: [          ] 0% (v2.0 milestone)
+Progress: [=         ] 10% (v2.0 milestone — 1/2 plans in Phase 5 done)
 
 ## Performance Metrics
 
@@ -32,8 +32,10 @@ Progress: [          ] 0% (v2.0 milestone)
 | 03-secondary-queries | 2/2 | 6 min | 3 min |
 | 04-ui-polish | 1/1 | 2 min | 2 min |
 
+| 05-shareable-url | 1/2 | 1 min | 1 min |
+
 **Recent Trend:**
-- Last 5 plans: 2 min, 3 min, 2 min, 5 min, 4 min
+- Last 5 plans: 3 min, 2 min, 5 min, 4 min, 1 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -87,6 +89,9 @@ Recent decisions affecting current work:
 - [v2.0 roadmap]: Round-trip React Query keys include 'outbound'/'return' discriminator — prevents cache deduplication of two parallel queries
 - [v2.0 roadmap]: Saved routes capped at 10 (not 5) — localStorage trivially small; 5 is too restrictive for commuters with multiple routes
 - [v2.0 roadmap]: Round-trip as new fourth tab (not toggle inside existing tab) — cleaner component separation, clearer user mental model
+- [Phase 05-01]: SearchParamsInit uses empty dep array in useEffect — fires once on mount; onInit excluded from deps to avoid infinite loop
+- [Phase 05-01]: if (from || to || date) guard in SearchParamsInit prevents spurious onInit on clean page loads
+- [Phase 05-01]: initialDate + 'T00:00:00' forces local-time Date parsing to avoid UTC midnight displaying as previous day in UTC+8
 
 ### Pending Todos
 
@@ -102,5 +107,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: v2.0 roadmap created — Phases 5–7 defined, ready for Phase 5 planning
+Stopped at: Completed 05-01-PLAN.md — SearchParamsInit component and QueryForm initial* props ready for Plan 02 wiring
 Resume file: None

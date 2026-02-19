@@ -43,7 +43,7 @@
 
 ### 分享
 
-- [ ] **SHAR-01**: 使用者可複製含起訖站與日期的查詢連結；他人開啟連結後頁面自動帶入條件並執行查詢
+- [x] **SHAR-01**: 使用者可複製含起訖站與日期的查詢連結；他人開啟連結後頁面自動帶入條件並執行查詢
 
 ## Future Requirements (v2.1+)
 
@@ -78,7 +78,7 @@
 | UIUX-04 | Phase 2 | Complete (02-02) |
 | QURY-03 | Phase 3 | Complete |
 | UIUX-01 | Phase 4 | Complete (04-01) |
-| SHAR-01 | Phase 5 (v2.0) | Pending |
+| SHAR-01 | Phase 5 (v2.0) | Complete |
 | PERS-01 | Phase 6 (v2.0) | Pending |
 | PERS-03 | Phase 6 (v2.0) | Pending |
 | QURY-05 | Phase 7 (v2.0) | Pending |
