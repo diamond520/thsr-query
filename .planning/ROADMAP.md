@@ -50,7 +50,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Backend data layer: extend types, add MOCK_TRAINS fixture, extend tdx-api.ts, create /api/tdx/trains Route Handler (parallel fetch + server-side join)
 - [x] 02-02-PLAN.md — Form UI: install shadcn components, taiwan-date utility, SeatBadge, QueryForm with station selects + date picker + swap button
-- [ ] 02-03-PLAN.md — Result UI: TrainCard (mobile), TrainTable (desktop), TrainList with idle/loading/error/empty states
+- [x] 02-03-PLAN.md — Result UI: TrainCard (mobile), TrainTable (desktop), TrainList with idle/loading/error/empty states
 - [ ] 02-04-PLAN.md — Integration + human verification: wire page.tsx with QueryForm + TrainList, end-to-end UI verification
 
 ### Phase 3: Secondary Queries
@@ -87,6 +87,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-02-19 |
-| 2. Core Query | 2/4 | In Progress | - |
+| 2. Core Query | 3/4 | In Progress | - |
 | 3. Secondary Queries | 0/2 | Not started | - |
 | 4. UI Polish | 0/1 | Not started | - |

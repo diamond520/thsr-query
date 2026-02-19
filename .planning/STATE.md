@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 2 of 4 (Core Query) — IN PROGRESS
-Plan: 2 of 4 in current phase — COMPLETE
-Status: Phase 2 plan 02-02 complete — QueryForm + SeatBadge + shadcn UI components ready, unblocks 02-03, 02-04
-Last activity: 2026-02-19 — Completed 02-02 (QueryForm + SeatBadge + taiwan-date utility + 6 shadcn components)
+Plan: 3 of 4 in current phase — COMPLETE
+Status: Phase 2 plan 02-03 complete — TrainCard + TrainTable + TrainList with 4-state machine ready, unblocks 02-04
+Last activity: 2026-02-19 — Completed 02-03 (TrainCard + TrainTable + TrainList result display UI)
 
-Progress: [█████░░░░░] 38%
+Progress: [██████░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 4.2 min
-- Total execution time: 22 min
+- Total plans completed: 6
+- Average duration: 4.0 min
+- Total execution time: 24 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 3/3 | 16 min | 5.3 min |
-| 02-core-query | 2/4 | 6 min | 3 min |
+| 02-core-query | 3/4 | 8 min | 2.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 8 min, 3 min, 5 min, 3 min, 3 min
+- Last 5 plans: 3 min, 5 min, 3 min, 3 min, 2 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -63,6 +63,9 @@ Recent decisions affecting current work:
 - [02-02]: initialFocus prop omitted from Calendar — deprecated/removed in react-day-picker v9 API
 - [02-02]: getTaiwanToday() called inside useState() initializer — hydration-safe pattern for all timezone-sensitive defaults
 - [02-02]: SeatBadge null status renders '—' gray badge — train absent from AvailableSeatStatusList is expected, not an error
+- [02-03]: enabled: !!params (not skipToken) — skipToken prevents refetch() from working in React Query v5
+- [02-03]: Form POST to THSR timetable search — THSR Wicket session-stateful, deep-link by trainNo impossible
+- [02-03]: BOOKING_CODE map duplicated in TrainCard+TrainTable — co-location preferred for 12-entry constant over shared import
 
 ### Pending Todos
 
@@ -77,5 +80,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-02-PLAN.md (QueryForm + SeatBadge + taiwan-date utility + 6 shadcn UI components)
+Stopped at: Completed 02-03-PLAN.md (TrainCard + TrainTable + TrainList result display UI)
 Resume file: None
