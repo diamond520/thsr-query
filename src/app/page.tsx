@@ -13,9 +13,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { SearchParamsInit } from '@/components/search-params-init'
 import { ShareButton } from '@/components/share-button'
 import { FavoriteRouteChips } from '@/components/favorite-route-chips'
+import { RoundTripForm } from '@/components/round-trip-form'
+import { RoundTripResult } from '@/components/round-trip-result'
 import { useFavorites } from '@/hooks/use-favorites'
 import type { FavoriteRoute } from '@/types/favorites'
 import type { TdxStation } from '@/types/tdx'
+import type { RoundTripParams } from '@/types/round-trip'
 
 async function fetchStations(): Promise<TdxStation[]> {
   const res = await fetch('/api/tdx/stations')
@@ -42,6 +45,9 @@ export default function Home() {
 
   // by-station state
   const [stationId, setStationId] = useState<string | null>(null)
+
+  // round-trip state
+  const [roundTripParams, setRoundTripParams] = useState<RoundTripParams | null>(null)
 
   // Stations for FavoriteRouteChips name resolution (same queryKey as QueryForm — React Query deduplicates)
   const { data: stations = [] } = useQuery({
@@ -111,10 +117,11 @@ export default function Home() {
 
         {/* Top-level mode switcher */}
         <Tabs defaultValue="by-od" className="w-full">
-          <TabsList className="w-full grid grid-cols-3 mb-4">
-            <TabsTrigger value="by-od">時間查詢</TabsTrigger>
-            <TabsTrigger value="by-train">車次查詢</TabsTrigger>
-            <TabsTrigger value="by-station">車站查詢</TabsTrigger>
+          <TabsList className="w-full grid grid-cols-4 mb-4">
+            <TabsTrigger value="by-od">時間</TabsTrigger>
+            <TabsTrigger value="by-train">車次</TabsTrigger>
+            <TabsTrigger value="by-station">車站</TabsTrigger>
+            <TabsTrigger value="round-trip">來回</TabsTrigger>
           </TabsList>
 
           {/* Tab 1: By OD — Phase 6 adds FavoriteRouteChips above QueryForm */}
@@ -165,6 +172,14 @@ export default function Home() {
               <ByStationForm onSubmit={setStationId} />
             </div>
             <ByStationResult stationId={stationId} />
+          </TabsContent>
+
+          {/* Tab 4: Round-Trip Query (Phase 7) */}
+          <TabsContent value="round-trip">
+            <div className="mb-6 rounded-lg border bg-card p-4 shadow-sm">
+              <RoundTripForm onSubmit={setRoundTripParams} />
+            </div>
+            <RoundTripResult params={roundTripParams} />
           </TabsContent>
         </Tabs>
       </div>
