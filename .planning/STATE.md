@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 6 — Saved Favorite Routes
-Plan: 1 of 3 complete
+Plan: 2 of 3 complete
 Status: In progress
-Last activity: 2026-02-19 — 06-01 complete (FavoriteRoute type + useLocalStorage hook + useFavorites hook)
+Last activity: 2026-02-19 — 06-02 complete (FavoriteRouteChips + extended QueryForm with save button)
 
-Progress: [===       ] 30% (v2.0 milestone — 1/3 plans in Phase 6 done)
+Progress: [====      ] 43% (v2.0 milestone — 2/3 plans in Phase 6 done)
 
 ## Performance Metrics
 
@@ -32,7 +32,7 @@ Progress: [===       ] 30% (v2.0 milestone — 1/3 plans in Phase 6 done)
 | 03-secondary-queries | 2/2 | 6 min | 3 min |
 | 04-ui-polish | 1/1 | 2 min | 2 min |
 | 05-shareable-url | 2/2 | 2 min | 1 min |
-| 06-saved-favorite-routes | 1/3 | 1 min | 1 min |
+| 06-saved-favorite-routes | 2/3 | 3 min | 1.5 min |
 
 **Recent Trend:**
 - Last 5 plans: 2 min, 5 min, 4 min, 1 min, 1 min
@@ -101,6 +101,9 @@ Recent decisions affecting current work:
 - [Phase 06-01]: firstLoadDone flag prevents write effect from overwriting localStorage before read effect fires on mount
 - [Phase 06-01]: addRoute uses functional updater form (prev =>) — reads latest state correctly with batched React updates
 - [Phase 06-01]: Silently skip duplicates and silently block at FAVORITES_MAX=10 — no error or toast per spec
+- [Phase 06-02]: Save button is hidden (not disabled) when isFull — cleaner UX per spec
+- [Phase 06-02]: onSave is optional prop — QueryForm backward compatible; existing callers need no changes
+- [Phase 06-02]: e.stopPropagation() on delete button inside Badge chip — prevents onApply firing when deleting
 
 ### Pending Todos
 
@@ -116,5 +119,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 06-01-PLAN.md — FavoriteRoute type + useLocalStorage hook + useFavorites hook; data layer complete
+Stopped at: Completed 06-02-PLAN.md — FavoriteRouteChips + extended QueryForm with save button; UI layer complete
 Resume file: None

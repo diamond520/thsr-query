@@ -39,7 +39,7 @@
 ### 個人化
 
 - [x] **PERS-01**: 使用者可儲存常用起訖站組合（最多 10 組，localStorage 持久化，不需登入）
-- [ ] **PERS-03**: 使用者可點擊已儲存路線一鍵帶入查詢表單起訖站，並可刪除已儲存路線
+- [x] **PERS-03**: 使用者可點擊已儲存路線一鍵帶入查詢表單起訖站，並可刪除已儲存路線
 
 ### 分享
 
@@ -80,7 +80,7 @@
 | UIUX-01 | Phase 4 | Complete (04-01) |
 | SHAR-01 | Phase 5 (v2.0) | Complete |
 | PERS-01 | Phase 6 (v2.0) | Complete |
-| PERS-03 | Phase 6 (v2.0) | Pending |
+| PERS-03 | Phase 6 (v2.0) | Complete |
 | QURY-05 | Phase 7 (v2.0) | Pending |
 
 **Coverage:**

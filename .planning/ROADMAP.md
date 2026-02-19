@@ -138,5 +138,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Secondary Queries | 2/2 | Complete | 2026-02-19 |
 | 4. UI Polish | 1/1 | Complete | 2026-02-19 |
 | 5. Shareable URL | 2/2 | Complete    | 2026-02-19 |
-| 6. Saved Favorite Routes | 0/3 | Not started | - |
+| 6. Saved Favorite Routes | 2/3 | In Progress|  |
 | 7. Round-Trip Query | 0/TBD | Not started | - |
