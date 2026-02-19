@@ -3,7 +3,7 @@
 **Defined:** 2026-02-19
 **Core Value:** 使用者能在幾秒內查到自己要搭的那班車有沒有位置。
 
-## v1 Requirements
+## v1 Requirements (Complete)
 
 ### 查詢功能
 
@@ -30,16 +30,25 @@
 - [x] **INFR-01**: Next.js 16（App Router）+ TypeScript 專案架構
 - [x] **INFR-02**: 可部署至 Vercel，環境變數設定於 Vercel dashboard
 
-## v2 Requirements
+## v2 Requirements (Milestone v2.0 — In Progress)
+
+### 查詢功能
+
+- [ ] **QURY-05**: 使用者可選擇起訖站、去程日期與回程日期，一次查詢兩段班次（去程與回程各自顯示完整時刻與座位狀態）
 
 ### 個人化
 
-- **PERS-01**: 使用者可儲存常用起訖站組合
+- [ ] **PERS-01**: 使用者可儲存常用起訖站組合（最多 10 組，localStorage 持久化，不需登入）
+- [ ] **PERS-03**: 使用者可點擊已儲存路線一鍵帶入查詢表單起訖站，並可刪除已儲存路線
+
+### 分享
+
+- [ ] **SHAR-01**: 使用者可複製含起訖站與日期的查詢連結；他人開啟連結後頁面自動帶入條件並執行查詢
+
+## Future Requirements (v2.1+)
+
 - **PERS-02**: 記憶上次查詢的起訖站，作為預設值
-
-### 通知
-
-- **NOTF-01**: 可分享特定班次的連結（URL 包含查詢條件）
+- **SHAR-02**: 來回票查詢的可分享連結（需 QURY-05 與 SHAR-01 穩定後再做）
 
 ## Out of Scope
 
@@ -48,8 +57,9 @@
 | 直接整合高鐵訂票 | 官方無公開訂票 API |
 | 會員系統 / 登入 | 不在本次範圍，無必要 |
 | 多語言（英日文） | 先做中文版 |
-| 即時到站資訊 | 不同的 API 端點，複雜度高，v2 考慮 |
+| 即時到站資訊 | 不同的 API 端點，複雜度高，v3 考慮 |
 | 離線功能 / PWA | 過度工程 |
+| 跨裝置路線同步 | 需要後端與帳號系統，不在範圍 |
 
 ## Traceability
 
@@ -68,12 +78,16 @@
 | UIUX-04 | Phase 2 | Complete (02-02) |
 | QURY-03 | Phase 3 | Complete |
 | UIUX-01 | Phase 4 | Complete (04-01) |
+| QURY-05 | Phase 5 (v2.0) | Pending |
+| PERS-01 | Phase 6 (v2.0) | Pending |
+| PERS-03 | Phase 6 (v2.0) | Pending |
+| SHAR-01 | Phase 5 (v2.0) | Pending |
 
 **Coverage:**
-- v1 requirements: 13 total
-- Mapped to phases: 13
+- v1 requirements: 13 total — all complete ✓
+- v2.0 requirements: 4 total — pending roadmap
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 — Phase 4 complete; UIUX-01 complete via 04-01 (mobile StationLinePicker)*
+*Last updated: 2026-02-19 — v2.0 requirements defined (QURY-05, PERS-01, PERS-03, SHAR-01)*
