@@ -13,7 +13,7 @@ Four phases build from a secure API foundation outward to a fully polished query
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - 建立 Next.js 專案、TDX OAuth2 token 管理、安全 API proxy 架構
-- [ ] **Phase 2: Core Query** - 完整的「依時間查詢」主流程（時刻表 + 座位狀態 + 訂票連結）
+- [x] **Phase 2: Core Query** - 完整的「依時間查詢」主流程（時刻表 + 座位狀態 + 訂票連結）
 - [ ] **Phase 3: Secondary Queries** - 依車次號查詢、依車站查詢座位剩餘
 - [ ] **Phase 4: UI Polish** - 視覺化車站選擇器與漸進式 UX 強化
 
@@ -51,7 +51,7 @@ Plans:
 - [x] 02-01-PLAN.md — Backend data layer: extend types, add MOCK_TRAINS fixture, extend tdx-api.ts, create /api/tdx/trains Route Handler (parallel fetch + server-side join)
 - [x] 02-02-PLAN.md — Form UI: install shadcn components, taiwan-date utility, SeatBadge, QueryForm with station selects + date picker + swap button
 - [x] 02-03-PLAN.md — Result UI: TrainCard (mobile), TrainTable (desktop), TrainList with idle/loading/error/empty states
-- [ ] 02-04-PLAN.md — Integration + human verification: wire page.tsx with QueryForm + TrainList, end-to-end UI verification
+- [x] 02-04-PLAN.md — Integration + human verification: wire page.tsx with QueryForm + TrainList, end-to-end UI verification
 
 ### Phase 3: Secondary Queries
 **Goal**: 使用者可透過車次號查詢單一列車停站時刻，亦可查詢特定車站的座位剩餘狀況
@@ -87,6 +87,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-02-19 |
-| 2. Core Query | 3/4 | In Progress | - |
+| 2. Core Query | 4/4 | Complete | 2026-02-19 |
 | 3. Secondary Queries | 0/2 | Not started | - |
 | 4. UI Polish | 0/1 | Not started | - |

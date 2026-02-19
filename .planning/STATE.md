@@ -5,33 +5,33 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** 使用者能在幾秒內查到自己要搭的那班車有沒有位置。
-**Current focus:** Phase 2 — API Integration
+**Current focus:** Phase 3 — Real API Integration
 
 ## Current Position
 
-Phase: 2 of 4 (Core Query) — IN PROGRESS
-Plan: 3 of 4 in current phase — COMPLETE
-Status: Phase 2 plan 02-03 complete — TrainCard + TrainTable + TrainList with 4-state machine ready, unblocks 02-04
-Last activity: 2026-02-19 — Completed 02-03 (TrainCard + TrainTable + TrainList result display UI)
+Phase: 2 of 4 (Core Query) — COMPLETE
+Plan: 4 of 4 in current phase — COMPLETE
+Status: Phase 2 complete — Full UI verified end-to-end; QueryForm + TrainList integrated in page.tsx; all 9 human verification tests passed
+Last activity: 2026-02-19 — Completed 02-04 (page.tsx integration + human verification of complete Phase 2 UI)
 
-Progress: [██████░░░░] 50%
+Progress: [████████░░] 62%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 4.0 min
-- Total execution time: 24 min
+- Total plans completed: 7
+- Average duration: 3.9 min
+- Total execution time: 29 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 3/3 | 16 min | 5.3 min |
-| 02-core-query | 3/4 | 8 min | 2.7 min |
+| 02-core-query | 4/4 | 13 min | 3.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 3 min, 5 min, 3 min, 3 min, 2 min
+- Last 5 plans: 5 min, 3 min, 3 min, 2 min, 5 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -66,6 +66,8 @@ Recent decisions affecting current work:
 - [02-03]: enabled: !!params (not skipToken) — skipToken prevents refetch() from working in React Query v5
 - [02-03]: Form POST to THSR timetable search — THSR Wicket session-stateful, deep-link by trainNo impossible
 - [02-03]: BOOKING_CODE map duplicated in TrainCard+TrainTable — co-location preferred for 12-entry constant over shared import
+- [02-04]: page.tsx marked 'use client' — simplest correct approach for form-UI page that needs useState; RSC benefits not applicable
+- [02-04]: queryParams state lives in page.tsx directly — no additional wrapper component needed at this scale
 
 ### Pending Todos
 
@@ -74,11 +76,11 @@ None.
 ### Blockers/Concerns
 
 - [Phase 1 resolved]: 使用者尚未申請 TDX 帳號 — non-blocking, mock mode works in dev and production
-- [Phase 2]: TDX `AvailableSeatStatusList` 端點是否支援批次查詢一條路線所有班次尚未確認 — 影響 join 策略，於 Phase 2 實作時驗證
+- [Phase 2]: TDX `AvailableSeatStatusList` 端點是否支援批次查詢一條路線所有班次尚未確認 — 影響 join 策略，於 Phase 3 實作時驗證
 - [Phase 4]: 視覺化車站選擇器為客製元件，無現成函式庫 — 建議 Phase 4 規劃前做設計 spike
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-03-PLAN.md (TrainCard + TrainTable + TrainList result display UI)
+Stopped at: Completed 02-04-PLAN.md (page.tsx integration + human verification of complete Phase 2 UI)
 Resume file: None

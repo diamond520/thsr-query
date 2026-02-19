@@ -10,12 +10,12 @@
 - [x] **QURY-01**: 使用者可選擇起站、訖站與日期查詢當日所有高鐵班次時刻
 - [x] **QURY-02**: 時刻表每一列班次直接顯示標準席和商務席的座位剩餘狀態（充足/有限/售完）
 - [ ] **QURY-03**: 使用者可輸入車次號查詢單一列車的停站與時刻表
-- [ ] **QURY-04**: 時刻表每一列班次顯示「去訂票」連結，點擊後跳至高鐵官方訂票頁面
+- [x] **QURY-04**: 時刻表每一列班次顯示「去訂票」連結，點擊後跳至高鐵官方訂票頁面
 
 ### UI / UX
 
 - [ ] **UIUX-01**: 起訖站選擇使用視覺化線路圖（12 個車站顯示為線段上的點，點擊選取）
-- [ ] **UIUX-02**: Mobile-first 響應式設計 — 手機版仿 t-ex app 風格（大點擊區域、卡片式），桌面版仿高鐵官網（清爽、表格式）
+- [x] **UIUX-02**: Mobile-first 響應式設計 — 手機版仿 t-ex app 風格（大點擊區域、卡片式），桌面版仿高鐵官網（清爽、表格式）
 - [x] **UIUX-03**: 日期選擇使用台灣時區（UTC+8），避免跨夜時顯示錯誤日期
 - [x] **UIUX-04**: 使用者可快速切換起訖站（交換按鈕）
 
@@ -62,8 +62,8 @@
 | INTG-03 | Phase 1 | Complete |
 | QURY-01 | Phase 2 | Complete |
 | QURY-02 | Phase 2 | Complete |
-| QURY-04 | Phase 2 | Pending |
-| UIUX-02 | Phase 2 | Pending |
+| QURY-04 | Phase 2 | Complete |
+| UIUX-02 | Phase 2 | Complete |
 | UIUX-03 | Phase 2 | Complete (02-02) |
 | UIUX-04 | Phase 2 | Complete (02-02) |
 | QURY-03 | Phase 3 | Pending |
@@ -76,4 +76,4 @@
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 — UIUX-03, UIUX-04 completed by 02-02 (QueryForm + taiwan-date utility)*
+*Last updated: 2026-02-19 — Phase 2 complete; QURY-01/02/04, UIUX-02/03/04 all verified by 02-04 human verification*
