@@ -28,12 +28,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. TDX OAuth2 token 以 server-side module-level 快取管理，`lib/tdx-token.ts` 加有 `server-only` 守衛，client bundle 中找不到任何 credential 相關字串
   3. `/api/tdx/stations` Route Handler 返回真實的 12 個高鐵車站資料（從 TDX API 取得），可透過 curl 驗證
   4. `TDX_CLIENT_ID` 與 `TDX_CLIENT_SECRET` 儲存在 `.env.local`（不 commit），Vercel 上亦設定對應環境變數
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Next.js 16 專案初始化（TypeScript、Tailwind v4、shadcn/ui）
-- [ ] 01-02: TDX token 管理器與 stations Route Handler
-- [ ] 01-03: Vercel 部署設定與 CI 健康確認
+- [ ] 01-01-PLAN.md — Next.js 16 scaffold: archive Vue 2, create-next-app, shadcn/ui, QueryClientProvider layout
+- [ ] 01-02-PLAN.md — TDX security layer: types, mock fixtures, server-only token manager, tdx-api helper, /api/tdx/stations Route Handler
+- [ ] 01-03-PLAN.md — Vercel deployment: CLI deploy, credential setup docs, end-to-end human verification
 
 ### Phase 2: Core Query
 **Goal**: 使用者可以選擇起訖站與日期，看到當日所有班次的時刻與座位狀態，並直接點擊前往官方訂票頁
