@@ -60,14 +60,14 @@
 | INTG-01 | Phase 1 | Pending |
 | INTG-02 | Phase 1 | Pending |
 | INTG-03 | Phase 1 | Pending |
-| UIUX-01 | Phase 2 | Pending |
-| UIUX-02 | Phase 2 | Pending |
-| UIUX-03 | Phase 2 | Pending |
-| UIUX-04 | Phase 2 | Pending |
 | QURY-01 | Phase 2 | Pending |
 | QURY-02 | Phase 2 | Pending |
 | QURY-04 | Phase 2 | Pending |
+| UIUX-02 | Phase 2 | Pending |
+| UIUX-03 | Phase 2 | Pending |
+| UIUX-04 | Phase 2 | Pending |
 | QURY-03 | Phase 3 | Pending |
+| UIUX-01 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 13 total
@@ -76,4 +76,4 @@
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 after initial definition*
+*Last updated: 2026-02-19 — traceability updated after roadmap creation*
