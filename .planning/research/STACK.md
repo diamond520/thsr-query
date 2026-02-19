@@ -55,41 +55,247 @@ App Router (not Pages Router) is the right choice here. Pages Router is legacy a
 
 ---
 
-## Installation
+## v2.0 UX Enhancement — Stack Additions
+
+This section covers the three new v2.0 features: round-trip query, saved routes (localStorage), and shareable query links (URL state). Research was conducted 2026-02-19.
+
+### Feature 1: Shareable Query Links (URL State)
+
+**Verdict: No new packages required. Use built-in Next.js App Router primitives.**
+
+The existing stack already has everything needed for URL-driven state.
+
+**How it works in Next.js App Router:**
+
+`useSearchParams` (from `next/navigation`) is a Client Component hook that reads the current URL query string as a read-only `URLSearchParams` object. To update params, create a new `URLSearchParams` instance and call `router.push()` with the serialized string.
+
+```typescript
+// Pattern: read params, update params
+'use client'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
+import { useCallback } from 'react'
+
+// Reading
+const searchParams = useSearchParams()
+const origin = searchParams.get('origin')      // '1' or null
+const destination = searchParams.get('dest')   // '12' or null
+const date = searchParams.get('date')          // '2026-03-15' or null
+
+// Writing (router.push causes full navigation, router.replace avoids history entry)
+const router = useRouter()
+const pathname = usePathname()
+
+const updateParams = useCallback((params: Record<string, string>) => {
+  const sp = new URLSearchParams(searchParams.toString())
+  Object.entries(params).forEach(([k, v]) => sp.set(k, v))
+  router.replace(pathname + '?' + sp.toString())
+}, [searchParams, pathname, router])
+```
+
+**Auto-run query on URL load:** When the page loads with `?origin=1&dest=12&date=2026-03-15`, read params in the component, populate the form fields, and pass a non-null `params` object to the query — React Query fires automatically because `enabled: !!params` becomes `true`.
+
+**Suspense requirement (production build):** Any Client Component using `useSearchParams` **must** be wrapped in a `<Suspense>` boundary or the production build fails with `Missing Suspense boundary with useSearchParams`. Verified against Next.js 16.1.6 docs.
+
+```typescript
+// page.tsx wraps the shareable query form in Suspense
+import { Suspense } from 'react'
+import { QueryFormWithURL } from '@/components/query-form-url'
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>載入中...</div>}>
+      <QueryFormWithURL />
+    </Suspense>
+  )
+}
+```
+
+**Alternative considered — `nuqs` (v2.8.8):** nuqs is a `useState`-compatible wrapper that syncs state with URL params, with type-safe parsers. It would eliminate the boilerplate of manually constructing `URLSearchParams`. However, it adds a dependency and requires wrapping the app in `NuqsAdapter`. For three simple string params (origin, destination, date), the native approach is straightforward enough. **Use nuqs only if URL state grows to many params or requires type coercion** (e.g., booleans, arrays). For v2.0, native `useSearchParams` + `router.replace` is sufficient.
+
+**React Query integration with URL params:**
+
+React Query v5 works naturally with URL-driven queries. Include the URL params in the `queryKey` — React Query re-fetches automatically when the key changes (i.e., when URL params change):
+
+```typescript
+const origin = searchParams.get('origin') ?? ''
+const dest = searchParams.get('dest') ?? ''
+const date = searchParams.get('date') ?? ''
+const hasAllParams = !!origin && !!dest && !!date
+
+const { data, isLoading, isError } = useQuery({
+  queryKey: ['trains', origin, dest, date],
+  queryFn: () => fetchTrains({ origin, dest, date }),
+  enabled: hasAllParams,   // skipToken alternative: queryFn: hasAllParams ? () => fetch(...) : skipToken
+  staleTime: 5 * 60 * 1000,
+})
+```
+
+React Query v5 also supports `skipToken` as a type-safe alternative to `enabled: false` that narrows parameter types inside `queryFn`. Either approach is valid; `enabled` is simpler for this use case.
+
+**Source:** Next.js 16.1.6 official docs — `useSearchParams`, verified 2026-02-16. [https://nextjs.org/docs/app/api-reference/functions/use-search-params](https://nextjs.org/docs/app/api-reference/functions/use-search-params). Confidence: HIGH.
+
+---
+
+### Feature 2: Round-Trip Query (Side-by-Side Results)
+
+**Verdict: No new packages required. Existing shadcn/ui Tabs component + Tailwind grid handles layout.**
+
+**UI approach — two options:**
+
+**Option A (recommended): Tab-based toggle.** Add a "來回票" tab alongside the existing query modes, or add a toggle within the by-OD mode that switches between single and round-trip. Each direction (outbound / return) has its own date picker. Results appear side-by-side on desktop (CSS grid), stacked on mobile.
+
+```
+Desktop: [Outbound results | Return results]   (grid grid-cols-2 gap-4)
+Mobile:  [Outbound results]
+         [Return results]                       (single column, stacked)
+```
+
+The existing `Tabs` component (already installed, `src/components/ui/tabs.tsx`) handles the outbound/return toggle UI. The existing `Calendar` + `Popover` components handle the two date pickers. No new shadcn/ui components are needed beyond what's already installed.
+
+**Option B: Two separate form sections.** Render a second collapsible form below the outbound form. Simpler state model but more screen space.
+
+Option A is recommended because it avoids duplicating the station picker UI, and the existing `Tabs` component supports it directly.
+
+**React state for round-trip:**
+
+```typescript
+// Two independent QueryParams, one per direction
+const [outboundParams, setOutboundParams] = useState<QueryParams | null>(null)
+const [returnParams, setReturnParams] = useState<QueryParams | null>(null)
+
+// When origin/destination are set, auto-swap them for return leg
+function handleOutboundSubmit(params: QueryParams) {
+  setOutboundParams(params)
+  // Pre-populate return with swapped origin/destination (user can override date)
+  setReturnParams(prev => prev ?? {
+    origin: params.destination,
+    destination: params.origin,
+    date: params.date,
+  })
+}
+```
+
+Two independent `useQuery` calls (one per direction) in React Query v5 is the correct pattern — they cache independently and fetch in parallel.
+
+**Layout: Tailwind `md:grid-cols-2`**
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <h2 className="text-sm font-medium mb-2">去程</h2>
+    <TrainList params={outboundParams} />
+  </div>
+  <div>
+    <h2 className="text-sm font-medium mb-2">回程</h2>
+    <TrainList params={returnParams} />
+  </div>
+</div>
+```
+
+The existing `TrainList` component is designed to accept `QueryParams | null` and handles idle/loading/error/empty states independently — it requires no changes to support round-trip. Just render two instances.
+
+**shadcn/ui components needed for round-trip:** All already installed. The `Separator` component would improve visual separation between outbound and return sections, but is optional (a Tailwind `border` works too).
+
+To add Separator if desired: `npx shadcn@latest add separator` — it's a thin Radix UI wrapper, zero new dependencies.
+
+---
+
+### Feature 3: Saved Routes (localStorage)
+
+**Verdict: One new package recommended — `usehooks-ts` — or inline a 20-line custom hook. No heavyweight state management needed.**
+
+**Why a hook, not raw `localStorage`:**
+
+Calling `localStorage` directly from a React component during SSR throws `window is undefined` in Next.js. A hook that guards with `typeof window !== 'undefined'` and fires only in `useEffect` is the safe pattern. Writing this correctly the first time (handling SSR, cross-tab sync, JSON serialization) takes ~30 lines of boilerplate.
+
+**Option A (recommended for this project): Inline custom hook**
+
+The saved routes feature is simple: an array of `{ origin: string; destination: string; label?: string }` objects stored under one localStorage key. A typed custom hook is 30 lines and adds zero dependencies:
+
+```typescript
+// src/hooks/use-saved-routes.ts
+'use client'
+import { useState, useEffect } from 'react'
+
+interface SavedRoute {
+  origin: string
+  destination: string
+  label?: string
+}
+
+const KEY = 'thsr-saved-routes'
+
+export function useSavedRoutes() {
+  const [routes, setRoutes] = useState<SavedRoute[]>([])
+
+  // Hydrate from localStorage after mount (avoids SSR mismatch)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(KEY)
+      if (raw) setRoutes(JSON.parse(raw))
+    } catch {}
+  }, [])
+
+  function save(route: SavedRoute) {
+    const next = [route, ...routes.filter(r =>
+      r.origin !== route.origin || r.destination !== route.destination
+    )].slice(0, 10) // cap at 10 saved routes
+    setRoutes(next)
+    localStorage.setItem(KEY, JSON.stringify(next))
+  }
+
+  function remove(origin: string, destination: string) {
+    const next = routes.filter(r => r.origin !== origin || r.destination !== destination)
+    setRoutes(next)
+    localStorage.setItem(KEY, JSON.stringify(next))
+  }
+
+  return { routes, save, remove }
+}
+```
+
+This approach: no new dependency, full type safety, SSR-safe (hydrates after mount), handles JSON serialization.
+
+**Option B: `usehooks-ts` (v3.1.1)**
+
+`usehooks-ts` is a TypeScript-first, tree-shakable collection of React hooks. Its `useLocalStorage` hook adds: automatic cross-tab sync via `StorageEvent`, configurable serializer/deserializer, and an `initializeWithValue` flag for SSR safety. The package is 47kb unpacked, tree-shakes to ~3-5kb for a single hook.
+
+```typescript
+import { useLocalStorage } from 'usehooks-ts'
+
+const [routes, setRoutes] = useLocalStorage<SavedRoute[]>('thsr-saved-routes', [])
+// routes is hydrated synchronously (SSR: uses initialValue, then syncs on mount)
+```
+
+**Recommendation: Use the inline custom hook.** The saved routes feature needs exactly one localStorage key with a simple array. `usehooks-ts` is well-maintained and the right choice if the project accumulates multiple localStorage concerns, but adding a dependency for a single use case is unjustified here. If more hooks are needed later (e.g., `useDebounce`, `useWindowSize`), add `usehooks-ts` at that point.
+
+**If `usehooks-ts` is chosen:** `npm install usehooks-ts@3.1.1`
+
+**shadcn/ui components for saved routes UI:**
+
+The existing stack has everything needed:
+- `Button` — "儲存" and quick-load buttons
+- `Badge` — display saved route labels
+- `Card` or inline `div` — saved routes list container
+
+No new shadcn/ui components required.
+
+---
+
+## Installation (v2.0 additions only)
 
 ```bash
-# Bootstrap project with App Router + TypeScript + Tailwind + ESLint
-npx create-next-app@latest thsr-query \
-  --typescript \
-  --tailwind \
-  --eslint \
-  --app \
-  --src-dir \
-  --import-alias "@/*"
+# No new packages required for the core three features.
+# The existing stack handles all three features natively.
 
-# Navigate into project
-cd thsr-query
+# OPTIONAL: Add shadcn Separator for visual dividers in round-trip layout
+npx shadcn@latest add separator
 
-# Initialize shadcn/ui (interactive — choose "New York" style, zinc base color)
-npx shadcn@latest init
+# OPTIONAL: Add usehooks-ts if localStorage complexity grows beyond a single key
+npm install usehooks-ts@3.1.1
 
-# Add shadcn/ui components used in this app
-npx shadcn@latest add button card select tabs badge skeleton
-
-# Server state management
-npm install @tanstack/react-query
-
-# Form validation
-npm install react-hook-form zod @hookform/resolvers
-
-# Date utilities
-npm install date-fns
-
-# Server boundary enforcement
-npm install server-only
-
-# Icons (installed with shadcn but explicit for version pinning)
-npm install lucide-react
+# OPTIONAL: Add nuqs if URL state grows beyond 3-4 simple string params
+npm install nuqs@2.8.8
 ```
 
 ---
@@ -232,6 +438,8 @@ const { data, isLoading, error, refetch } = useQuery({
 | `react-hook-form` + Zod | Formik + Yup | react-hook-form: less re-renders, native integration with shadcn form components. Formik+Yup: legacy. |
 | `date-fns` v4 | `dayjs`, `luxon` | dayjs: lighter (2kb vs 5kb for used functions). date-fns: tree-shakable, better TypeScript types, immutable. Both are valid. |
 | Module-level token cache | Upstash Redis | Upstash Redis: only if multiple Vercel instances sharing token state becomes a measurable problem. Start simple. |
+| Native `useSearchParams` + `router.replace` | `nuqs` | nuqs: use if URL state grows to 5+ params, needs type coercion (booleans, numbers, arrays), or needs array/object serialization. For 3 string params, native is sufficient. |
+| Inline `useSavedRoutes` hook | `usehooks-ts` | usehooks-ts: use if project needs multiple localStorage hooks or cross-tab sync becomes a requirement. |
 
 ---
 
@@ -248,6 +456,8 @@ const { data, isLoading, error, refetch } = useQuery({
 | Pages Router (`pages/` directory) | Legacy API. No Server Components, no Route Handlers as co-located files. Next.js team's focus is App Router. | App Router (`app/` directory). |
 | React Server Components for query forms | Query forms depend on user input at runtime — cannot be pre-rendered. | Client Components (`'use client'`) for forms, Server Components only for static/cached data like station list. |
 | `getServerSideProps` | Pages Router pattern. Not available in App Router. | App Router: Route Handlers for API + Server Components for data fetching. |
+| `window.localStorage` directly in component render | Throws `window is undefined` during SSR/build. | Access localStorage in `useEffect` or use the inline `useSavedRoutes` hook. |
+| `router.push` for URL param updates (shareable links) | `router.push` adds a browser history entry — pressing Back during autocomplete is disruptive. | `router.replace` for param updates that should not create history entries. |
 
 ---
 
@@ -272,6 +482,24 @@ const { data, isLoading, error, refetch } = useQuery({
 - Customize the generated code in `components/ui/`
 - Because: Components live in your repo, not in a node_modules black box
 
+**For URL-based shareable links:**
+- `useSearchParams()` to read, `router.replace(pathname + '?' + params.toString())` to write
+- Wrap consuming component in `<Suspense>` in `page.tsx`
+- Include URL params in React Query `queryKey` array so queries re-fire on URL change
+- Because: Native App Router pattern, no extra dependency
+
+**For saved routes (localStorage):**
+- Inline `useSavedRoutes` custom hook in `src/hooks/`
+- Hydrate state in `useEffect` (never in render) to avoid SSR mismatch
+- Cap at ~10 saved routes to prevent unbounded localStorage growth
+- Because: One key, simple array — no library justified
+
+**For round-trip layout:**
+- Render two `TrainList` instances (existing component, no changes needed)
+- Wrap in `grid grid-cols-1 md:grid-cols-2 gap-4` Tailwind container
+- Use existing `Tabs` component to toggle between single/round-trip modes
+- Because: `TrainList` is already self-contained with idle/loading/error states
+
 ---
 
 ## Version Compatibility
@@ -285,12 +513,14 @@ const { data, isLoading, error, refetch } = useQuery({
 | `react-hook-form@7.71.1` | `react@^16.8 \|\| ^17 \|\| ^18 \|\| ^19` | Fully compatible with React 19. |
 | `zod@4.3.6` | TypeScript 5.x | Zod v4 has breaking changes from v3. Use v4 since this is a new project. |
 | `date-fns@4.1.0` | TypeScript 5.x | v4 is fully tree-shakable. Breaking changes from v2/v3 in some format tokens. New project — use v4. |
+| `usehooks-ts@3.1.1` (optional) | `react@^16.8 \|\| ^17 \|\| ^18 \|\| ^19` | Only needed if inline localStorage hook proves insufficient. v3.x is the current major. |
+| `nuqs@2.8.8` (optional) | Next.js `>=14.2.0` | Only needed if URL state complexity grows. Requires `NuqsAdapter` in root layout. |
 
 ---
 
 ## Sources
 
-### Primary (HIGH confidence — npm registry, verified 2026-02-19)
+### Primary (HIGH confidence — npm registry + official docs, verified 2026-02-19)
 
 - `npm info next dist-tags` — confirmed `next@16.1.6` is `latest` stable, published 2026-01-27; Node.js `>=20.9.0` required
 - `npm info next@16.1.6 peerDependencies` — confirmed React 18/19 compatibility
@@ -299,12 +529,17 @@ const { data, isLoading, error, refetch } = useQuery({
 - `npm info @tanstack/react-query version` — confirmed `5.90.21` latest
 - `npm info react version` — confirmed `react@19.2.4` latest
 - `npm info typescript version` — confirmed `typescript@5.9.3` latest
+- `npm show usehooks-ts version` — confirmed `3.1.1` is current
+- `npm show nuqs version` — confirmed `2.8.8` is current
+- Next.js 16.1.6 official docs, `useSearchParams` page — verified 2026-02-16. URL: [https://nextjs.org/docs/app/api-reference/functions/use-search-params](https://nextjs.org/docs/app/api-reference/functions/use-search-params). Confirmed: Suspense requirement for static rendering, `router.replace` + `new URLSearchParams` pattern for updates, Client Component only restriction.
+- TanStack Query v5 official docs — `enabled` option, `skipToken`, queryKey array serialization. [https://tanstack.com/query/v5/docs/framework/react/guides/disabling-queries](https://tanstack.com/query/v5/docs/framework/react/guides/disabling-queries). Confirmed: `enabled: !!params` pattern, `skipToken` for type-safe disabling.
 
 ### Secondary (MEDIUM confidence)
 
 - Next.js 15 blog post (`nextjs.org/blog/next-15`) — App Router caching changes, Route Handler defaults, React 19 integration patterns. Directionally applicable to Next.js 16 (same App Router model).
-- Existing Vue 2 codebase (`src/api/thrs-api.js`, `src/utils/request.js`) — confirmed TDX API base URL pattern, endpoint paths, OAuth2 client_credentials flow requirement
-- `ARCHITECTURE.md` (same research session) — confirmed module-level token cache pattern and Route Handler proxy architecture
+- Existing codebase inspection (`src/components/train-list.tsx`, `src/app/page.tsx`) — confirmed `enabled: !!params` pattern already in use, confirmed `Tabs` component installed and functioning, confirmed `react-day-picker` calendar already installed.
+- WebSearch — nuqs documentation and community usage patterns. Multiple 2025 sources confirm active maintenance and Next.js 15/16 compatibility.
+- WebSearch — usehooks-ts SSR behavior. Multiple sources confirm v3 `useLocalStorage` handles SSR via `initializeWithValue` option.
 
 ### Tertiary (LOW confidence — validate before implementing)
 
@@ -330,8 +565,15 @@ const { data, isLoading, error, refetch } = useQuery({
    - What's unclear: Whether TDX has changed the path structure since migration.
    - Recommendation: Verify exact base URL with TDX Swagger UI (`tdx.transportdata.tw/api-service/swagger`) when credentials are available.
 
+4. **Round-trip URL state encoding**
+   - For shareable round-trip links, the URL needs to encode two sets of params: outbound (origin, dest, date) and return (return_date at minimum, since origin/dest invert).
+   - Proposed scheme: `?origin=1&dest=12&date=2026-03-15&return_date=2026-03-18`
+   - The `return_date` param presence acts as a signal to activate round-trip mode.
+   - This is a design decision, not a technical blocker — no library research needed.
+
 ---
 
 *Stack research for: Next.js 16 + TDX OAuth2, THSR Transit Query App*
 *Researched: 2026-02-19*
+*v2.0 UX Enhancement additions researched: 2026-02-19*
 *Valid until: 2026-05-19 (stable libraries; re-check if Next.js major version or Tailwind major version changes)*

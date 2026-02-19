@@ -1,245 +1,232 @@
 # Project Research Summary
 
-**Project:** THSR Query — Next.js rewrite of Vue 2 transit query app
-**Domain:** Transit query web app with server-side OAuth2 API proxy
+**Project:** THSR Query App — v2.0 UX Enhancement (Round-Trip, Saved Routes, Shareable URL)
+**Domain:** Next.js 16 App Router + TDX OAuth2 — Transit Query Web App
 **Researched:** 2026-02-19
-**Confidence:** HIGH (stack, architecture, pitfalls); MEDIUM-HIGH (features)
+**Confidence:** HIGH
 
 ## Executive Summary
 
-This project is a rewrite of a Vue 2 Taiwan High Speed Rail (THSR) timetable and seat availability query app into a modern Next.js 16 App Router application deployed on Vercel. The core architectural constraint — that TDX API credentials (`client_secret`) must never reach the browser — dictates the entire system structure: all TDX communication happens server-side through Route Handler proxies, and the OAuth2 token lives in a module-level cache that is never exposed to client code. This is a solved problem in Next.js App Router, and the stack has a clear, well-documented pattern: Next.js 16 + TypeScript + Tailwind CSS v4 + shadcn/ui + React Query v5 + Zod.
+This milestone adds three UX enhancements to an existing, working THSR (Taiwan High Speed Rail) query app: round-trip query with coordinated two-leg results, saved favorite routes persisted in localStorage, and shareable query links via URL state. The existing app is a Next.js 16 App Router SPA using React Query v5, Tailwind CSS v4, and shadcn/ui. All three v2.0 features are buildable with the existing stack — no new runtime dependencies are required. The architecture is purely additive: new components and hooks drop in alongside existing ones without restructuring the server-side TDX OAuth2 proxy or any of the existing query modes.
 
-The recommended approach is to build a strict server/client split. A module-level token manager (`lib/tdx-token.ts`, guarded with `import 'server-only'`) caches the Bearer token per Vercel function instance. Four Route Handlers proxy requests to TDX endpoints with appropriate cache revalidation intervals: 24h for static data (stations, general timetable), 5 minutes for daily timetables, and 60 seconds for seat availability. Client Components use React Query to fetch from these proxy endpoints — never from TDX directly. The station list is the only data pre-fetched server-side and passed as props.
+The recommended build order is: (1) shareable URL first, then (2) saved routes, then (3) round-trip query. URL state infrastructure (Suspense wrapping, `router.replace` hook, `initialDate?` prop on `QueryForm`) must land first because both saved routes and the round-trip form share the same `initialOrigin?`/`initialDestination?` prop pattern and key-remount technique that URL state introduces. Building in this order touches each shared file exactly once. Round-trip goes last because it is entirely additive — new files only — and can be developed in parallel on a separate branch if timeline requires it.
 
-The primary risks are security (client_secret exposed if the boundary is violated), correctness (stale timetable data due to misconfigured caching), and UX degradation (missing loading/empty states, geographic station order scrambled by sorting). All three are well-understood and preventable through disciplined use of `server-only` guards, explicit `revalidate` configuration per endpoint, and preservation of API station order. The build order recommended by architecture research — token manager first, then stations endpoint, then timetable, then UI — provides working vertical slices at each step and surfaces credential or API issues early.
+The two highest-severity risks are well-understood and preventable: (1) `useSearchParams()` crashing the production build without a Suspense boundary — works silently in `next dev` but fails at `next build` — prevented by isolating the hook in a dedicated `SearchParamsInit` child component; and (2) localStorage reads during SSR causing hydration mismatch — prevented by hydrating favorites via `useEffect` after mount, not in the render path. A third risk, `router.push()` on every field change creating a Back-button loop, is prevented by using `router.replace()` for all URL updates and only `router.push()` (if needed at all) on explicit form submission.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The 2026 standard for this type of app is Next.js 16 App Router with TypeScript. Tailwind CSS v4 (PostCSS plugin model, no `tailwind.config.js`) and shadcn/ui (code-generator, not a package) provide the UI layer. React Query v5 manages client-side async state. All library versions were verified against npm registry on 2026-02-19.
+The existing stack is fully sufficient for all three v2.0 features. No new runtime packages are required. See `.planning/research/STACK.md` for full version table.
 
-See `.planning/research/STACK.md` for full version table and installation commands.
+**Core technologies in use:**
+- **Next.js 16.1.6 App Router:** `useSearchParams` + `router.replace` (built-in) handle shareable URL state. Route Handlers continue to proxy TDX calls server-side.
+- **React Query v5 (TanStack Query 5.90.21):** Two independent `useQuery` calls with distinct `queryKey` arrays handle parallel API calls for round-trip. `enabled: !!params` pattern is already established in `train-list.tsx`.
+- **shadcn/ui + Tailwind v4:** All components needed for v2.0 are already installed: `Tabs`, `Calendar`, `Button`, `Badge`. Optional addition: `npx shadcn@latest add separator` for visual dividers in the round-trip layout.
 
-**Core technologies:**
-- **Next.js 16.1.6:** App Router, Route Handlers, Data Cache — Vercel-native; Pages Router is legacy
-- **TypeScript 5.9.3:** Required for safe TDX response typing; catches params-not-awaited bugs at compile time
-- **Tailwind CSS v4.2.0:** v4 PostCSS model; required by shadcn/ui; mobile-first by default
-- **shadcn/ui 3.8.5 CLI:** Installs Radix UI components as local code; full control over component styles
-- **React Query v5.90.21:** Handles loading/error/stale states for user-triggered queries; `enabled: false` until form submit
-- **react-hook-form 7.71.1 + Zod 4.3.6:** Form validation with shared schemas for client and server
-- **date-fns 4.1.0:** Taiwan date formatting; avoids UTC-vs-UTC+8 bugs with `Intl.DateTimeFormat`
-- **server-only 0.0.1:** Build-time guard preventing accidental client import of TDX credential modules
+**Optional packages (add only if needed):**
+- `nuqs@2.8.8` — only if URL state grows beyond 3-4 simple string params; not required for v2.0
+- `usehooks-ts@3.1.1` — only if localStorage complexity expands beyond a single key; not required for v2.0
 
-**Critical version notes:** Node.js >=20.9.0 required by Next.js 16. React Query v5 drops `onSuccess` callback (use `useEffect` instead). Zod v4 has breaking changes from v3.
+**Critical version notes:** Next.js 16 requires Node.js >=20.9.0. React Query v5 drops `onSuccess` callback (use `useEffect` instead). Zod v4 (in use) has breaking changes from v3.
 
 ### Expected Features
 
-The app serves a single use case: "I want to get on a specific THSR train — does it have seats?" Every feature either serves or supports that core job.
+See `.planning/research/FEATURES.md` for the full prioritization matrix and UX wireframes.
 
-See `.planning/research/FEATURES.md` for full prioritization matrix and mobile UX patterns.
+**Must have (table stakes) — v2.0 launch blockers:**
+- Round-trip: shared origin/destination pair, two independent date pickers, auto-reversed return direction, two `TrainList` panels (stacked on mobile / side-by-side on desktop)
+- Saved routes: up to 10 routes in localStorage, chip UI above the query form, one-tap load pre-fills form, "儲存" button when stations are selected, persist across browser sessions
+- Share link (single-leg): `?from=1&to=12&date=2026-03-01` URL schema, auto-run query on page open when all three params present and valid, copy-to-clipboard button in results header
 
-**Must have (table stakes) — launch blockers:**
-- Origin/destination station picker with auto-default and swap button
-- Date + time input (default: today, current time) with departure/arrival toggle
-- Timetable results list showing train number, departure, arrival, duration
-- Seat availability (標準席/商務席) inline in each result row — no second tap required
-- "去訂票" link per train row to THSR official booking
-- Station seat availability view (by station, direction tabs)
-- Train number lookup flow
-- Loading, empty, and error states for all three query types
+**Should have (competitive differentiators) — v2.0 launch:**
+- Round-trip: desktop side-by-side layout via `md:grid-cols-2`, sticky "去程"/"回程" section headers on mobile to prevent scroll confusion
+- Saved routes: display human-readable station name labels (not raw IDs), horizontal scroll on mobile chip row
+- Share link: native Web Share API (`navigator.share()`) with clipboard fallback on mobile
 
-**Should have (differentiators):**
-- Color-coded seat status badges (green/yellow/red) for at-a-glance scanning
-- Date quick-select chips (今天/明天/後天)
-- Visual linear station selector on mobile (12-station single corridor maps perfectly to a tap-target line)
-- Data freshness timestamp on seat status display
-- URL-based query state for shareable links
+**Defer to v2.1+:**
+- Share link for round-trip (URL schema extension: `?outDate=...&returnDate=...&mode=roundtrip`) — requires both round-trip and single-leg share link stable first
+- Saved route swap button (reverse a saved route direction with one tap) — separable UX polish
+- "已達上限" toast notification for saved routes at capacity — v2.0 can silently disable the save button
+- Saved route sync across devices — requires auth and backend, explicitly out of scope
 
-**Defer to v2+:**
-- OS-driven dark mode via CSS custom properties
-- PWA / installable app
-- Persist last query in localStorage
-
-**Anti-features to reject:** Push notifications (TDX data is not real-time), in-app booking (no public API), calendar availability heat-map (too many API calls), manual dark mode toggle, pagination of results (THSR has at most ~50 trains/day — render all).
+**Anti-features rejected from research:** Date range picker for round-trip (wrong UX model — THSR legs are independent dates, not a continuous stay), auto-save last query to localStorage (conflicts with URL state as source of truth), unlimited saved routes (UI degrades beyond ~10 items), saved routes in a separate settings page (users want quick access, not route management), share link that encodes a selected train (query is the shareable unit, not a specific train).
 
 ### Architecture Approach
 
-The system has two clear tiers: a thin browser layer (Client Components that collect user input and display results) and a Next.js server layer (Route Handlers that authenticate with TDX and proxy responses). The station list is the only data that crosses from server to client via props — all other data flows through fetch calls from Client Components to Route Handler endpoints.
+All three features integrate cleanly into the existing component tree. `page.tsx` is the central integration point touched by all three features, but changes are additive: a new fourth tab for round-trip, Suspense wiring for URL state, and `useFavoriteRoutes` hook invocation for saved routes. `QueryForm` gains three new optional props (`initialOrigin?`, `initialDestination?`, `initialDate?`) used by both URL state initialization and favorite route loading. The key-prop remount pattern (`<QueryForm key={formKey} />`) handles pre-filling without converting the form to a fully controlled component.
 
-See `.planning/research/ARCHITECTURE.md` for full system diagram, directory structure, and data flow examples.
+See `.planning/research/ARCHITECTURE.md` for full data flow diagrams and file-level change tables.
 
-**Major components:**
-1. `lib/tdx-token.ts` — Module-level token cache; `import 'server-only'`; never touches client
-2. `app/api/tdx/*/route.ts` — Four Route Handlers (stations, timetable, timetable-by-train, seat-status); each calls `getTdxToken()` and proxies to TDX with appropriate `revalidate`
-3. `app/page.tsx` (Server Component) — Pre-fetches station list, passes as props to Client Component forms
-4. `components/QueryTabs.tsx`, `ByTimeForm.tsx`, `ByTrainNoForm.tsx`, `ByStationForm.tsx` — Client Components; use React Query to call Route Handlers; own their own form and result state
-5. `types/tdx.ts` — Typed TDX response shapes derived from existing Vue 2 component field usage
+**Major components and responsibilities:**
 
-**Recommended directory structure:**
-```
-app/
-  layout.tsx, page.tsx, loading.tsx, error.tsx
-  api/tdx/
-    stations/route.ts
-    timetable/route.ts
-    timetable-by-train/route.ts
-    seat-status/route.ts
-components/         # all 'use client'
-lib/
-  tdx-token.ts      # server-only
-  tdx-api.ts        # server-only
-  utils.ts
-types/tdx.ts
-```
+1. `src/components/search-params-init.tsx` (NEW) — reads `useSearchParams()` once on mount, calls `onInit(from, to, date)` callback; always wrapped in `<Suspense fallback={null}>` in `page.tsx`; renders nothing
+2. `src/hooks/use-query-url.ts` (NEW) — writes URL via `router.replace(pathname + '?' + params, { scroll: false })` on form submit; never on individual field changes
+3. `src/hooks/use-favorite-routes.ts` (NEW) — localStorage CRUD with SSR guard (`typeof window === 'undefined'` in `useState` initializer), `try-catch` with shape validation, versioned storage key (`thsr-favorites-v2`), cap at 10 routes
+4. `src/components/favorite-routes.tsx` (NEW) — pill chip UI rendered above `QueryForm` in the `by-od` tab; tapping a chip triggers key-prop remount of `QueryForm` to pre-fill stations
+5. `src/components/round-trip-form.tsx` (NEW) — origin, destination (shared between legs), two independent date pickers
+6. `src/components/round-trip-results.tsx` (NEW) — renders two `TrainList` instances with distinct query keys (`['trains', 'outbound', ...]` and `['trains', 'return', ...]`)
+
+**Unchanged:** All API Route Handlers, `train-list.tsx`, `train-card.tsx`, `train-table.tsx`, `station-line-picker.tsx`, all other existing components, `lib/*`, `providers.tsx`, `layout.tsx`.
+
+**Modified existing files:**
+
+| File | What Changes |
+|------|-------------|
+| `src/app/page.tsx` | Add `<Suspense>` + `SearchParamsInit`; wire `useFavoriteRoutes`; add fourth `by-roundtrip` tab; add `roundTripParams` state |
+| `src/components/query-form.tsx` | Add `initialOrigin?`, `initialDestination?`, `initialDate?` props used as `useState` initializers |
+| `src/types/tdx.ts` | Add `RoundTripParams` interface |
 
 ### Critical Pitfalls
 
-See `.planning/research/PITFALLS.md` for full detail, phase mapping, and recovery strategies.
+The v2.0 milestone introduces 10 new pitfalls specific to URL state, localStorage, and round-trip query patterns. See `.planning/research/PITFALLS.md` for the complete 22-pitfall catalog with verification checklists.
 
-1. **TDX client_secret exposed in client bundle** — Use `TDX_CLIENT_SECRET` (no `NEXT_PUBLIC_`); add `import 'server-only'` to token module; all TDX calls go through Route Handlers only. This is the highest severity risk — a build-time safeguard and code review checklist item.
+**Top pitfalls for v2.0:**
 
-2. **Stale timetable/seat data due to misconfigured caching** — Next.js 15+ Route Handlers are NOT cached by default. Add explicit `{ next: { revalidate: N } }` per endpoint: 86400s for stations, 300s for timetable, 60s for seat status. Seat availability must use `{ cache: 'no-store' }` or `export const dynamic = 'force-dynamic'`.
+1. **`useSearchParams()` without Suspense crashes production build (Pitfall 13)** — Works silently in `next dev`; fails at `next build` with "Missing Suspense boundary" error. Prevention: always isolate `useSearchParams()` in a child component (`SearchParamsInit`) wrapped in `<Suspense fallback={null}>`. Verify by running `next build` before each PR merge — not just `next dev`.
 
-3. **Token fetched on every request** — Cache token in module-level variable with `expiresAt` check; refresh 60 seconds before actual expiry. On cold starts, one re-fetch is unavoidable and acceptable (~200ms).
+2. **localStorage read during SSR causes hydration mismatch (Pitfall 14)** — `localStorage` does not exist on the server; reading it in render or a `useState` initializer crashes. Prevention: use `useEffect` + empty initial state with a `hydrated` flag; render the favorites chip list only after mount. Do not use `suppressHydrationWarning` as a band-aid.
 
-4. **"use client" boundary creep** — Query forms need `'use client'` but must not import from `lib/tdx-token.ts` or `lib/tdx-api.ts`. The `server-only` package enforces this at build time. Never put `'use client'` in `app/page.tsx` or `app/layout.tsx`.
+3. **`router.push()` on field change creates Back-button loop (Pitfall 19)** — Every field edit adds a browser history entry; pressing Back cycles through field states instead of leaving the page. Prevention: use `router.replace()` for all URL updates triggered by form submit; `router.push()` is not needed for this app.
 
-5. **Date timezone mismatch (UTC vs UTC+8)** — `new Date().toISOString()` returns UTC date. Between midnight and 08:00 Taiwan time, this is yesterday. Always use `new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei' }).format(new Date())` or accept the date from the user's browser form input.
+4. **Round-trip React Query keys collide without direction discriminator (Pitfall 17)** — If outbound and return queries share the same key structure, React Query may deduplicate them and serve one result for both panels. Prevention: include `'outbound'` or `'return'` as the second element in every round-trip `queryKey` array.
 
-6. **params must be awaited in Next.js 15+** — `const { stationId } = await params` not `params.stationId`. TypeScript surfaces this at compile time if types are correct; enable strict mode.
+5. **localStorage corrupted data crashes React tree (Pitfall 15)** — `JSON.parse()` on malformed or schema-migrated data throws uncaught `SyntaxError`. Prevention: always wrap in `try-catch`, validate the parsed shape (check `Array.isArray()` and field types), clear the key on failure, use a versioned key (`thsr-favorites-v2`).
 
-7. **Station list geographic order scrambled by sorting** — TDX `/Station` endpoint returns stations in StationID order (north to south: 南港→左營). Do not sort alphabetically or by any other key. Preserve API order in all dropdowns and selectors.
+6. **Return date before outbound date not blocked in the calendar UI (Pitfall 16)** — TDX silently returns wrong results; user has no feedback. Prevention: pass `disabled={(date) => date < outboundDate}` to the return `Calendar` component, and add a `useEffect` to auto-advance the return date when the outbound date changes to a later value.
 
 ## Implications for Roadmap
 
-Research strongly suggests a four-phase structure that establishes working vertical slices in dependency order, placing security-critical foundations first.
+Research identifies three independently deliverable features that share a small amount of infrastructure. The recommended three-phase build order minimizes re-touching shared files and surfaces production risks early.
 
-### Phase 1: Project Scaffolding and Secure API Foundation
+### Phase 1: Shareable URL (Feature 3 — URL State)
 
-**Rationale:** The TDX credential management must be correct from day one — this is not a refactor-later concern. A credential leak is unrecoverable without rotating keys. Building the token manager and a single working Route Handler first proves the entire server-side security model before any UI is built. This also unblocks all subsequent phases because every query form depends on working Route Handlers.
+**Rationale:** Establishes Suspense wiring and `QueryForm` prop extensions (`initialDate?`) that Phases 2 and 3 both rely on. Building this first means each shared file (`page.tsx`, `query-form.tsx`) is modified in a single coherent pass rather than incrementally across three PRs. Also the quickest Phase 1 win — visible, shippable feature (copy a link, open it, see results) with no UI redesign.
 
-**Delivers:** A working Next.js 16 project with App Router configured, environment variables set up, token manager (`lib/tdx-token.ts`) implemented and tested, a debug endpoint to verify TDX auth, and the stations Route Handler returning real data. No visible UI yet.
+**Delivers:** Shareable single-leg query links (`?from=1&to=12&date=2026-03-01`), form pre-fills and auto-runs on page open, URL updates on form submit without page reload, copy-to-clipboard button in results header.
 
-**Addresses from FEATURES.md:** Table stakes foundation — all features depend on working TDX auth.
+**Addresses features:** Share link table-stakes (auto-run, copy button, URL query params), mobile Web Share API.
 
-**Avoids from PITFALLS.md:** Pitfall 1 (client_secret exposure), Pitfall 2 (token per request), Pitfall 5 (route/page conflicts), Pitfall 6 (params not awaited), Pitfall 12 (error.tsx must be 'use client').
+**Avoids pitfalls:** Suspense boundary build failure (13), router.push Back-button loop (19), URL double-encoding (20), form/URL state divergence (22).
 
-**Research flag:** Standard patterns — well-documented Next.js Route Handler + OAuth2 proxy. No additional research phase needed.
+**New files:** `src/components/search-params-init.tsx`, `src/hooks/use-query-url.ts`
 
----
+**Modified files:** `src/app/page.tsx` (Suspense + URL init wiring), `src/components/query-form.tsx` (add `initialDate?` prop)
 
-### Phase 2: Core Timetable Query (By Time)
-
-**Rationale:** The by-time timetable query (origin, destination, date, time) is the primary user flow and the highest-value feature. Implementing it first as a complete vertical slice — Route Handler + Client Component form + results display — validates the full architecture before building secondary flows. Seat availability inline requires this to exist first.
-
-**Delivers:** A working timetable query form (station pickers, date/time input, departure/arrival toggle, swap button) that returns results with seat status badges and "去訂票" links. Full loading, empty, and error states. Mobile-responsive card layout.
-
-**Implements from ARCHITECTURE.md:** `app/api/tdx/timetable/route.ts`, `components/ByTimeForm.tsx`, `components/TimetableResults.tsx`, station list pre-fetched server-side and passed as props.
-
-**Addresses from FEATURES.md:** All P1 features for the by-time query flow — station picker, date/time input, timetable results, seat status inline, booking link, loading/error/empty states, swap button.
-
-**Avoids from PITFALLS.md:** Pitfall 3 (stale timetable data — configure `revalidate: 300` and `revalidate: 60`), Pitfall 4 ('use client' boundary creep), Pitfall 9 (station order), Pitfall 10 (date timezone).
-
-**Research flag:** May benefit from a quick research pass on TDX DailyTimetable and AvailableSeatStatusList endpoint response shapes — specifically whether seat status can be batch-fetched for all trains at once or requires per-train calls. Verify when TDX credentials are available.
+**Research flag:** Standard patterns. `useSearchParams` behavior is verified in Next.js 16.1.6 official docs. Run a quick smoke test of `router.replace` + `useSearchParams()` re-render in Next.js 16.1.6 before committing to the approach — behavior is confirmed in docs but worth a 10-minute local verification.
 
 ---
 
-### Phase 3: Secondary Query Flows (By Train Number, By Station)
+### Phase 2: Saved Favorite Routes (Feature 2 — localStorage)
 
-**Rationale:** Both flows are independent of the by-time timetable and share the same architectural pattern (Route Handler + Client Component). Building them second means the pattern is already established; implementation is straightforward and low-risk. The GeneralTimetable endpoint caching pitfall (Pitfall 11) must be addressed here.
+**Rationale:** Builds on the `initialOrigin?`/`initialDestination?` prop pattern and key-remount technique that Phase 1 established. The `useFavoriteRoutes` hook is fully self-contained (no round-trip dependency). Completing this before round-trip means `query-form.tsx` receives all its new props in a single final pass.
 
-**Delivers:** Train number lookup with full stop timeline display. Station seat availability view with north/southbound direction tabs. Both include loading, empty, and error states.
+**Delivers:** Chip row above the `by-od` form showing up to 10 saved routes, one-tap load pre-fills form origin and destination, "儲存" button that appears when stations are selected (hidden when pair already saved or limit reached), data persists across browser sessions.
 
-**Implements from ARCHITECTURE.md:** `app/api/tdx/timetable-by-train/route.ts`, `app/api/tdx/seat-status/route.ts`, `components/ByTrainNoForm.tsx`, `components/ByStationForm.tsx`, `components/SeatStatusResults.tsx`.
+**Uses stack:** Inline `useSavedRoutes` custom hook pattern (no `usehooks-ts` dependency needed), existing `Button` + `Badge` shadcn components.
 
-**Addresses from FEATURES.md:** Train number lookup (P1), station seat availability view (P1).
+**Addresses features:** Saved routes table-stakes (chips, quick-load, persist), human-readable labels, one-tap save, mobile horizontal scroll.
 
-**Avoids from PITFALLS.md:** Pitfall 11 (GeneralTimetable fetching 300 records — cache with `revalidate: 86400`), Pitfall 9 (station order in byStation view), Pitfall 7 (token 401 mid-session — retry logic).
+**Avoids pitfalls:** localStorage hydration mismatch (14), corrupted data crash (15), localStorage max-items quota error (21).
 
-**Research flag:** Standard patterns. TDX GeneralTimetable and AvailableSeatStatusList endpoint shapes need verification against actual credentials, but the caching and proxy approach is identical to Phase 2.
+**New files:** `src/hooks/use-favorite-routes.ts`, `src/components/favorite-routes.tsx`
+
+**Modified files:** `src/app/page.tsx` (wire `useFavoriteRoutes`, pre-fill via key prop), `src/components/query-form.tsx` (add `initialOrigin?` + `initialDestination?` props)
+
+**Research flag:** Standard patterns. localStorage SSR pattern and hook design are fully specified in ARCHITECTURE.md. No additional research needed.
 
 ---
 
-### Phase 4: UI Polish and Progressive Enhancements
+### Phase 3: Round-Trip Query (Feature 1 — New Tab)
 
-**Rationale:** Polish after core function is validated. UX improvements that require more effort (visual station selector, date chips, URL state) are lower risk when the query logic is already working and tested. Deploying to Vercel and addressing production environment differences (cold start behavior) belongs here.
+**Rationale:** Entirely additive — creates new files and a new fourth tab in `page.tsx`. No shared files require additional modification beyond what Phases 1 and 2 already touched (except the `page.tsx` fourth-tab addition). Can be developed in parallel on a separate branch during Phases 1-2 without merge conflicts.
 
-**Delivers:** Date quick-select chips (今天/明天/後天), visual linear station selector on mobile (v1.x feature), data freshness timestamps on seat status, URL-based query state for shareable links, Vercel deployment with environment variables configured, production smoke tests.
+**Delivers:** "來回查詢" fourth tab with shared station picker, two independent date pickers (not a range picker), auto-reversed return direction, side-by-side desktop layout (`md:grid-cols-2`), stacked mobile layout with sticky "去程"/"回程" section headers.
 
-**Implements from ARCHITECTURE.md:** Mobile-responsive enhancements, `next/headers`-based query state management.
+**Implements:** `RoundTripForm` (origin, destination, outboundDate, returnDate), `RoundTripResults` (two `TrainList` instances with `outbound`/`return` discriminators in query keys), `RoundTripParams` type in `src/types/tdx.ts`.
 
-**Addresses from FEATURES.md:** All P2 features (date chips, visual station selector, freshness timestamp, URL state).
+**Addresses features:** Round-trip table-stakes and differentiators: shared station pair, two date pickers, auto-reverse, two result panels, desktop side-by-side, mobile sticky headers.
 
-**Avoids from PITFALLS.md:** Pitfall 8 (Vercel stateless concern — cold start behavior validated in real deployment environment).
+**Avoids pitfalls:** Return date validation (16), React Query key collision (17), mobile scroll confusion with nested scroll traps (18).
 
-**Research flag:** Visual linear station selector is a custom component with no off-the-shelf solution — may warrant a focused research/design spike before implementation. All other enhancements are straightforward.
+**New files:** `src/components/round-trip-form.tsx`, `src/components/round-trip-results.tsx`
+
+**Modified files:** `src/app/page.tsx` (add `by-roundtrip` fourth tab + `roundTripParams` state), `src/types/tdx.ts` (add `RoundTripParams`)
+
+**Research flag:** Standard patterns. `TrainList` is already self-contained and requires no changes. Two-date-picker UX pattern is confirmed as industry standard for transit (vs. range picker for hotel stays). No additional research needed.
+
+---
+
+### Phase 4 (v2.1): Round-Trip Shareable Link
+
+**Rationale:** Requires both Phase 1 (URL infrastructure) and Phase 3 (round-trip mode) to be stable. URL schema extension adds `?outDate=...&returnDate=...&mode=roundtrip` and the `mode` param drives which tab activates on deep link. Low complexity once foundations exist.
+
+**Delivers:** Shareable round-trip links that restore both dates and activate the round-trip tab on open. Explicitly deferred from v2.0 launch per FEATURES.md MVP definition.
 
 ---
 
 ### Phase Ordering Rationale
 
-- **Security before UX:** Token manager and API proxy are Phase 1 because a credential leak requires key rotation and damages trust permanently. Getting this right first means the rest of the build is low-risk.
-- **Primary flow before secondary:** By-time timetable query is the core use case. Validating the complete by-time vertical slice (form → Route Handler → TDX → results with seat status) proves the architecture before building the two secondary flows.
-- **Secondary flows together:** By-train-number and by-station share identical architecture and can be built in parallel or sequentially in Phase 3. They share the `SeatStatusResults` component.
-- **Polish last:** URL state, date chips, and the visual station selector are enhancements that add complexity; they belong after core functionality is proven.
+- **URL state first** because `SearchParamsInit` and the `initialDate?`/`initialOrigin?`/`initialDestination?` props on `QueryForm` are shared infrastructure for all three features. Establishing them in Phase 1 means `query-form.tsx` is modified once, cleanly, in a single PR.
+- **Saved routes second** because it extends Phase 1's prop additions (`initialOrigin?`, `initialDestination?`) without round-trip dependency. Completing before round-trip means `query-form.tsx` is finalized before round-trip begins (which creates a new `RoundTripForm` rather than modifying `QueryForm`).
+- **Round-trip last** because it creates entirely new components without touching anything Phases 1 and 2 modified (except the `page.tsx` fourth-tab addition). If schedule requires parallel work, Phase 3 can run alongside Phase 2 on a separate branch.
+- **Architecture confirms this order** — ARCHITECTURE.md's explicit build order recommendation is Phase 3 → Phase 2 → Phase 1 labeled as Features 3, 2, 1 respectively — matching this synthesis.
 
 ### Research Flags
 
-**Needs research during planning:**
-- **Phase 2:** TDX `AvailableSeatStatusList` endpoint shape — determine if seat status for all trains on a route can be fetched in one call or requires per-train lookups. This affects the join strategy in the results layer.
-- **Phase 4:** Visual linear station selector — custom component design; no established library. A design spike is recommended before committing to implementation.
-- **All phases:** TDX exact base URL, `$format=JSON` requirement, token TTL, and rate limits — verify empirically when TDX credentials are obtained.
+**Phases with standard patterns — skip additional research:**
+- **Phase 1 (Shareable URL):** `useSearchParams` is fully documented in Next.js 16.1.6 official docs. `router.replace` semantics are confirmed. Code patterns are specified and ready to implement. Quick local smoke test recommended, not a full research pass.
+- **Phase 2 (Saved Routes):** localStorage SSR pattern is established. Hook design is fully specified in ARCHITECTURE.md. No novel patterns.
+- **Phase 3 (Round-Trip):** `TrainList` component is self-contained; rendering two instances is straightforward. `RoundTripParams` type and all component boundaries are fully specified in ARCHITECTURE.md.
 
-**Standard patterns (skip research-phase):**
-- **Phase 1:** Next.js Route Handler proxy with OAuth2 client_credentials — textbook pattern, fully documented.
-- **Phase 3:** By-train and by-station flows — identical architecture to Phase 2 once patterns are established.
+**Needs targeted validation before coding:**
+- **All phases:** TDX OAuth2 token endpoint URL and token TTL should be empirically verified when credentials are available (LOW confidence per STACK.md). This does not block v2.0 features — no new TDX endpoints are introduced in this milestone — but is relevant for the underlying token caching reliability.
+- **Phase 1:** Quick `next build` smoke test after adding `useSearchParams` Suspense wiring before the PR is merged — failure mode is silent in `next dev` and only surfaces at build time.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All versions verified against npm registry 2026-02-19. Compatibility matrices confirmed. |
-| Features | MEDIUM-HIGH | Core features derived from existing Vue 2 codebase and clear domain constraints (12 stations, single corridor). UX patterns from training knowledge, not live competitor analysis. t-ex app design details unverified. |
-| Architecture | HIGH | Route Handler proxy pattern is standard Next.js practice. Directory structure matches official docs. Token caching strategy is well-reasoned. |
-| Pitfalls | HIGH (Next.js) / MEDIUM (TDX-specific) | Next.js pitfalls verified via official docs. TDX rate limits, exact token TTL, and API response shapes need empirical verification with real credentials. |
+| Stack | HIGH | All package versions verified via npm registry 2026-02-19. No new packages required. Next.js 16.1.6 official docs consulted directly for `useSearchParams`, `router.replace`, and Suspense requirement. |
+| Features | MEDIUM-HIGH | v2.0 feature scope confirmed via direct codebase analysis of existing components. UX patterns (two date pickers vs. range picker, chip placement, share link behavior) confirmed via Next.js docs and transit app domain research. Design decisions (5 vs. 10 saved routes, new tab vs. toggle) are resolved with clear rationale. |
+| Architecture | HIGH | Integration design based on direct codebase analysis of `page.tsx`, `query-form.tsx`, `train-list.tsx`. Official Next.js docs confirm Suspense requirement, `router.replace` vs `router.push` semantics, and `{ scroll: false }` option. React official docs confirm key-prop remount pattern. |
+| Pitfalls | HIGH (Next.js patterns), MEDIUM (TDX-specific) | Next.js v2.0 pitfalls (Suspense, localStorage SSR, Back-button loop, query key collision) verified against official docs and confirmed GitHub issues. TDX-specific pitfalls (rate limits, `$format=JSON` requirement, exact token TTL) are based on known OAuth2 patterns and community usage — validate when TDX credentials are available. |
 
-**Overall confidence:** HIGH for build approach; MEDIUM for TDX API specifics.
+**Overall confidence:** HIGH for all implementation decisions; MEDIUM for TDX API specifics that require live credentials to verify (none of which block v2.0 development).
 
 ### Gaps to Address
 
-- **TDX OAuth2 token endpoint URL:** Presumed to be `https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token`. Verify when credentials are obtained before Phase 1 completes. Low recovery cost if wrong (update one constant).
+- **Saved routes capacity: 5 vs 10.** FEATURES.md specifies 5; STACK.md specifies 10. Recommendation from synthesis: **10 routes**. localStorage is trivially small for this data volume (10 station ID pairs); 5 is too restrictive for regular commuters with multiple routes. Resolve before Phase 2 coding begins.
 
-- **TDX token TTL:** Presumed ~86400s (24h). Verify from actual `expires_in` response. Token caching logic depends on this — must check before Phase 1 sign-off.
+- **Round-trip mode entry point: new tab vs. toggle.** ARCHITECTURE.md recommends a new fourth tab ("來回查詢"). FEATURES.md recommends a toggle inside the existing "時間查詢" tab. Recommendation from synthesis: **new fourth tab** — cleaner component separation (no conditional branching in `QueryForm`), clearer user mental model (round-trip is a different query shape, not a mode). Resolve before Phase 3 coding begins.
 
-- **TDX base URL for v2 THSR endpoints:** Presumed `https://tdx.transportdata.tw/api/basic/v2/Rail/THSR`. Verify via TDX Swagger UI. Note PITFALLS.md mentions some community sources cite `/v3` — check which version applies.
+- **Round-trip desktop container width.** Current `max-w-2xl` (672px) is too narrow for side-by-side train lists. Options: widen globally to `max-w-5xl`, or widen only the round-trip results section conditionally. Recommendation: conditional widening via a wrapper class on the results container only, keeping the form compact. Resolve during Phase 3 implementation.
 
-- **AvailableSeatStatusList batch behavior:** Unknown whether one call returns status for all trains on a route or requires per-train requests. This affects Phase 2 implementation design. Verify during Phase 2 API integration.
+- **TDX API endpoint verification.** Token endpoint URL, base URL, token TTL, `$format=JSON` requirement, and rate limits are LOW confidence per STACK.md. These do not block v2.0 development (no new TDX endpoints introduced) but should be verified when testing the existing OAuth2 proxy.
 
-- **THSR official booking deep link URL format:** Whether `https://www.thsrc.com.tw` booking page accepts URL params for train number/date pre-fill. If not, fall back to booking homepage. Verify during Phase 2.
-
-- **t-ex app design specifics:** User referenced "mobile UI inspired by t-ex app style." Exact design details unverified. User should provide screenshots or specific elements during Phase 4 UI polish.
+- **`router.replace` + `useSearchParams()` re-render behavior in Next.js 16.1.6.** Confirmed in docs; worth a 10-minute local smoke test to verify `useSearchParams()` actually triggers a re-render when `router.replace()` updates the URL in the same page — expected behavior per docs but easy to verify before Phase 1 PR.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- npm registry (`npm info`) — all package versions verified 2026-02-19
-- Next.js official docs — Route Handlers, App Router caching, project structure, params-as-Promise (v15 breaking change)
-- Existing Vue 2 codebase (`src/api/thrs-api.js`, `src/components/byTime.vue`, `byStation.vue`, `byTrainNo.vue`) — endpoint paths, query param names, response field names, current feature set
+- npm registry (`npm info` commands) — confirmed exact versions: `next@16.1.6`, `react@19.2.4`, `typescript@5.9.3`, `tailwindcss@4.2.0`, `@tanstack/react-query@5.90.21`, `shadcn@3.8.5` — 2026-02-19
+- Next.js 16.1.6 official docs — `useSearchParams` Suspense requirement, `router.replace` vs `router.push` semantics, `{ scroll: false }` option — 2026-02-19
+- Next.js docs: `nextjs.org/docs/messages/missing-suspense-with-csr-bailout` — production build error for `useSearchParams` without Suspense
+- TanStack Query v5 docs — `enabled` option, `skipToken`, parallel queries, `queryKey` deduplication behavior
+- React official docs — key-prop pattern for resetting child state (`react.dev/learn/you-might-not-need-an-effect#resetting-all-state-when-a-prop-changes`)
+- Direct codebase analysis: `src/app/page.tsx`, `src/components/query-form.tsx`, `src/components/train-list.tsx`, `src/lib/taiwan-date.ts`, `package.json` — confirmed existing patterns, component interfaces, and installed dependencies
 
 ### Secondary (MEDIUM confidence)
-- Next.js 15 release notes — GET Route Handler caching defaults, params as Promise
-- Vercel docs — Vercel KV discontinued Dec 2024, replaced by Upstash Redis via Marketplace
-- THSR domain knowledge — 12 stations (StationID 1=南港 to 12=左營), single north-south corridor, seat classes (標準席/商務席)
-- Apple HIG / Material Design — mobile tap target minimums (44pt / 48dp)
-- Transit app UX conventions — Google Maps, Japan transit app patterns (training knowledge)
+- Vercel/Next.js GitHub issues #74494, #61654 — `useSearchParams` Suspense requirement in production builds — 2026-02-19
+- Vercel/Next.js GitHub discussion #48110 — shallow routing in App Router vs. Pages Router — 2026-02-19
+- Transit app UX research — two-date-picker pattern for independent-leg travel (vs. range picker for stays), localStorage favorites patterns, URL-as-state shareability patterns — 2026-02-19
+- nuqs v2.8.8 documentation and usehooks-ts v3.1.1 docs — confirmed as valid alternatives for URL state and localStorage hooks respectively; not required for v2.0 scope
 
-### Tertiary (LOW confidence — validate before implementation)
-- TDX OAuth2 token endpoint URL — community knowledge, needs empirical verification
-- TDX token TTL (~86400s) — community-cited, needs verification from actual `expires_in`
-- TDX API base URL for v2/v3 THSR endpoints — needs verification via TDX Swagger UI
-- TDX rate limits by plan tier — unverified; test with actual account
-- t-ex app design patterns — training knowledge only; user should provide live reference
+### Tertiary (LOW confidence — validate with live TDX account)
+- TDX OAuth2 token endpoint URL: `https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token` — verify with TDX official docs
+- TDX token TTL ~86400s — commonly cited but empirically unverified; check `expires_in` from actual token response
+- TDX `$format=JSON` query param requirement — verify against actual API responses
+- TDX API rate limits per plan tier — verify with TDX account
 
 ---
 *Research completed: 2026-02-19*
