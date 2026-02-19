@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 5 — Shareable URL
-Plan: 1 of 2 complete
-Status: In Progress
-Last activity: 2026-02-19 — 05-01 complete (SearchParamsInit + QueryForm initial* props)
+Plan: 2 of 2 complete
+Status: Complete
+Last activity: 2026-02-19 — 05-02 complete (ShareButton + page.tsx URL wiring, next build passes)
 
-Progress: [=         ] 10% (v2.0 milestone — 1/2 plans in Phase 5 done)
+Progress: [==        ] 20% (v2.0 milestone — 2/2 plans in Phase 5 done)
 
 ## Performance Metrics
 
@@ -32,7 +32,7 @@ Progress: [=         ] 10% (v2.0 milestone — 1/2 plans in Phase 5 done)
 | 03-secondary-queries | 2/2 | 6 min | 3 min |
 | 04-ui-polish | 1/1 | 2 min | 2 min |
 
-| 05-shareable-url | 1/2 | 1 min | 1 min |
+| 05-shareable-url | 2/2 | 2 min | 1 min |
 
 **Recent Trend:**
 - Last 5 plans: 3 min, 2 min, 5 min, 4 min, 1 min
@@ -92,6 +92,11 @@ Recent decisions affecting current work:
 - [Phase 05-01]: SearchParamsInit uses empty dep array in useEffect — fires once on mount; onInit excluded from deps to avoid infinite loop
 - [Phase 05-01]: if (from || to || date) guard in SearchParamsInit prevents spurious onInit on clean page loads
 - [Phase 05-01]: initialDate + 'T00:00:00' forces local-time Date parsing to avoid UTC midnight displaying as previous day in UTC+8
+- [Phase 05-02]: Suspense placed outside max-w-2xl container with fallback={null} — zero layout shift; wraps only SearchParamsInit effect component
+- [Phase 05-02]: router.replace with { scroll: false } — preserves scroll position after form submit
+- [Phase 05-02]: formKey increment pattern — only correct way to reset useState from new props; fires once on URL-param mount
+- [Phase 05-02]: navigator.canShare({ url }) guard before navigator.share() — prevents runtime TypeError on browsers that expose share but not URL sharing
+- [Phase 05-02]: auto-execute query when all three URL params present — open link → immediate results without manual submit
 
 ### Pending Todos
 
@@ -107,5 +112,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 05-01-PLAN.md — SearchParamsInit component and QueryForm initial* props ready for Plan 02 wiring
+Stopped at: Completed 05-02-PLAN.md — ShareButton + page.tsx URL wiring complete; Phase 5 done; next build passes
 Resume file: None
