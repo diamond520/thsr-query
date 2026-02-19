@@ -1,7 +1,7 @@
 // src/fixtures/tdx-mock.ts
 // Mock data matching real TDX API response format for /Station endpoint
 // Used when TDX_CLIENT_ID / TDX_CLIENT_SECRET env vars are not set
-import type { TdxStation, TdxEnrichedTrain } from '@/types/tdx'
+import type { TdxStation, TdxEnrichedTrain, TdxTrainStop, TdxSeatStatus, TdxStationSeatStatus } from '@/types/tdx'
 
 export const MOCK_STATIONS: TdxStation[] = [
   {
@@ -152,3 +152,81 @@ export const MOCK_TRAINS: TdxEnrichedTrain[] = [
   { trainNo: '0113', departureTime: '12:00', arrivalTime: '13:52', standardSeat: 'O', businessSeat: null },
   { trainNo: '0115', departureTime: '14:00', arrivalTime: '15:52', standardSeat: 'O', businessSeat: 'O' },
 ]
+
+/** Mock for /api/tdx/timetable-by-train — keyed by trainNo string.
+ *  Train 0101 is southbound (南港→左營), full 12-stop sequence.
+ *  Train 0102 is northbound (左營→南港), full 12-stop sequence.
+ *  Unknown train numbers return [] (empty array, not an error).
+ */
+export const MOCK_TIMETABLE_BY_TRAIN: Record<string, TdxTrainStop[]> = {
+  '0101': [
+    { sequence: 1,  stationId: '1',  stationName: '南港', arrivalTime: '',      departureTime: '06:00' },
+    { sequence: 2,  stationId: '2',  stationName: '台北', arrivalTime: '06:06', departureTime: '06:07' },
+    { sequence: 3,  stationId: '3',  stationName: '板橋', arrivalTime: '06:13', departureTime: '06:14' },
+    { sequence: 4,  stationId: '4',  stationName: '桃園', arrivalTime: '06:27', departureTime: '06:28' },
+    { sequence: 5,  stationId: '5',  stationName: '新竹', arrivalTime: '06:43', departureTime: '06:44' },
+    { sequence: 6,  stationId: '6',  stationName: '苗栗', arrivalTime: '06:58', departureTime: '06:59' },
+    { sequence: 7,  stationId: '7',  stationName: '台中', arrivalTime: '07:09', departureTime: '07:10' },
+    { sequence: 8,  stationId: '8',  stationName: '彰化', arrivalTime: '07:20', departureTime: '07:21' },
+    { sequence: 9,  stationId: '9',  stationName: '雲林', arrivalTime: '07:32', departureTime: '07:33' },
+    { sequence: 10, stationId: '10', stationName: '嘉義', arrivalTime: '07:43', departureTime: '07:44' },
+    { sequence: 11, stationId: '11', stationName: '台南', arrivalTime: '07:53', departureTime: '07:54' },
+    { sequence: 12, stationId: '12', stationName: '左營', arrivalTime: '07:57', departureTime: '' },
+  ],
+  '0102': [
+    { sequence: 1,  stationId: '12', stationName: '左營', arrivalTime: '',      departureTime: '06:30' },
+    { sequence: 2,  stationId: '11', stationName: '台南', arrivalTime: '06:34', departureTime: '06:35' },
+    { sequence: 3,  stationId: '10', stationName: '嘉義', arrivalTime: '06:44', departureTime: '06:45' },
+    { sequence: 4,  stationId: '9',  stationName: '雲林', arrivalTime: '06:55', departureTime: '06:56' },
+    { sequence: 5,  stationId: '8',  stationName: '彰化', arrivalTime: '07:07', departureTime: '07:08' },
+    { sequence: 6,  stationId: '7',  stationName: '台中', arrivalTime: '07:18', departureTime: '07:19' },
+    { sequence: 7,  stationId: '6',  stationName: '苗栗', arrivalTime: '07:29', departureTime: '07:30' },
+    { sequence: 8,  stationId: '5',  stationName: '新竹', arrivalTime: '07:44', departureTime: '07:45' },
+    { sequence: 9,  stationId: '4',  stationName: '桃園', arrivalTime: '08:00', departureTime: '08:01' },
+    { sequence: 10, stationId: '3',  stationName: '板橋', arrivalTime: '08:14', departureTime: '08:15' },
+    { sequence: 11, stationId: '2',  stationName: '台北', arrivalTime: '08:21', departureTime: '08:22' },
+    { sequence: 12, stationId: '1',  stationName: '南港', arrivalTime: '08:28', departureTime: '' },
+  ],
+  '0115': [
+    { sequence: 1,  stationId: '1',  stationName: '南港', arrivalTime: '',      departureTime: '14:00' },
+    { sequence: 2,  stationId: '2',  stationName: '台北', arrivalTime: '14:06', departureTime: '14:07' },
+    { sequence: 3,  stationId: '3',  stationName: '板橋', arrivalTime: '14:13', departureTime: '14:14' },
+    { sequence: 4,  stationId: '7',  stationName: '台中', arrivalTime: '14:49', departureTime: '14:50' },
+    { sequence: 5,  stationId: '11', stationName: '台南', arrivalTime: '15:19', departureTime: '15:20' },
+    { sequence: 6,  stationId: '12', stationName: '左營', arrivalTime: '15:46', departureTime: '' },
+  ],
+}
+
+/** Mock for /api/tdx/seat-status — pre-split into northbound/southbound.
+ *  Used when stationId is any value in mock mode.
+ */
+export const MOCK_SEAT_STATUS_BY_STATION: TdxStationSeatStatus = {
+  northbound: [
+    {
+      TrainNo: '0102', Direction: 1, StartingStationID: '12', EndingStationID: '1',
+      StopStations: [
+        { StopSequence: 1, StationID: '2', StationName: { Zh_tw: '台北', En: 'Taipei' }, NextStationID: '1', StandardSeatStatus: 'O', BusinessSeatStatus: 'O' },
+      ],
+    },
+    {
+      TrainNo: '0104', Direction: 1, StartingStationID: '12', EndingStationID: '1',
+      StopStations: [
+        { StopSequence: 1, StationID: '2', StationName: { Zh_tw: '台北', En: 'Taipei' }, NextStationID: '1', StandardSeatStatus: 'L', BusinessSeatStatus: 'O' },
+      ],
+    },
+  ],
+  southbound: [
+    {
+      TrainNo: '0101', Direction: 0, StartingStationID: '1', EndingStationID: '12',
+      StopStations: [
+        { StopSequence: 1, StationID: '2', StationName: { Zh_tw: '台北', En: 'Taipei' }, NextStationID: '3', StandardSeatStatus: 'L', BusinessSeatStatus: 'O' },
+      ],
+    },
+    {
+      TrainNo: '0103', Direction: 0, StartingStationID: '1', EndingStationID: '12',
+      StopStations: [
+        { StopSequence: 1, StationID: '2', StationName: { Zh_tw: '台北', En: 'Taipei' }, NextStationID: '3', StandardSeatStatus: 'X', BusinessSeatStatus: 'L' },
+      ],
+    },
+  ],
+}

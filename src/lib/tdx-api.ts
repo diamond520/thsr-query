@@ -3,7 +3,7 @@ import 'server-only'  // Build error if imported in any 'use client' file
 
 import { getTdxToken } from './tdx-token'
 import { MOCK_STATIONS } from '@/fixtures/tdx-mock'
-import type { TdxStation, TdxDailyTrain, TdxSeatStatus } from '@/types/tdx'
+import type { TdxStation, TdxDailyTrain, TdxSeatStatus, TdxGeneralTimetableStop, TdxGeneralTimetableResponse } from '@/types/tdx'
 
 const TDX_BASE = 'https://tdx.transportdata.tw/api/basic/v2/Rail/THSR'
 
@@ -83,4 +83,28 @@ export async function fetchSeatStatus(stationId: string): Promise<TdxSeatStatus[
     throw new Error(`TDX AvailableSeatStatusList failed: ${res.status} ${res.statusText}`)
   }
   return res.json()
+}
+
+/**
+ * Fetch general timetable (all stops) for a single train by train number.
+ * Mock mode: Not called directly — Route Handler returns MOCK_TIMETABLE_BY_TRAIN.
+ * Real mode: GET /GeneralTimetable/TrainNo/{trainNo}
+ * Response is an array — take [0] (one schedule per unique train number).
+ * Returns empty array [] if train number not found (not a 5xx error).
+ * IMPORTANT: ArrivalTime is "" for first stop; DepartureTime is "" for last stop — not errors.
+ */
+export async function fetchGeneralTimetable(trainNo: string): Promise<TdxGeneralTimetableStop[]> {
+  const token = await getTdxToken()
+  const res = await fetch(
+    `${TDX_BASE}/GeneralTimetable/TrainNo/${trainNo}`,
+    { headers: { Authorization: `Bearer ${token}` } }
+    // No revalidate — route.ts sets force-dynamic
+  )
+  if (!res.ok) {
+    throw new Error(`TDX GeneralTimetable failed: ${res.status} ${res.statusText}`)
+  }
+  const data: TdxGeneralTimetableResponse[] = await res.json()
+  if (!data.length) return []
+  // Response is array; take first element (one schedule per train number)
+  return data[0].GeneralTimetable.StopTimes
 }

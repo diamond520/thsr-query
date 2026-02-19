@@ -73,3 +73,42 @@ export interface TdxEnrichedTrain {
   standardSeat: TdxSeatCode | null   // null if train not in seat status list
   businessSeat: TdxSeatCode | null
 }
+
+// --- Phase 3: By-Train and By-Station types ---
+
+/** One stop in GeneralTimetable/TrainNo response (raw TDX shape) */
+export interface TdxGeneralTimetableStop {
+  StopSequence: number
+  StationID: string               // e.g. "1"
+  StationName: TdxStationName     // Zh_tw, En
+  ArrivalTime: string             // "HH:MM"; empty string "" for first stop (train origin)
+  DepartureTime: string           // "HH:MM"; empty string "" for last stop (train terminus)
+}
+
+/** TDX GeneralTimetable/TrainNo/{TrainNo} response element (API returns an array) */
+export interface TdxGeneralTimetableResponse {
+  GeneralTimetable: {
+    GeneralTrainInfo: {
+      TrainNo: string
+      Direction: 0 | 1
+      StartingStationID: string
+      EndingStationID: string
+    }
+    StopTimes: TdxGeneralTimetableStop[]
+  }
+}
+
+/** Server-normalized stop returned from /api/tdx/timetable-by-train */
+export interface TdxTrainStop {
+  sequence: number
+  stationId: string
+  stationName: string             // Zh_tw only
+  arrivalTime: string             // "HH:MM" or "" for first stop
+  departureTime: string           // "HH:MM" or "" for last stop
+}
+
+/** Server response from /api/tdx/seat-status (pre-split by Direction) */
+export interface TdxStationSeatStatus {
+  northbound: TdxSeatStatus[]     // Direction === 1
+  southbound: TdxSeatStatus[]     // Direction === 0
+}
