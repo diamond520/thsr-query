@@ -74,10 +74,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. 手機版起訖站選擇顯示為線路圖（12 個車站標示於線段上），點擊車站即可選取，不需下拉選單
   2. 視覺化選擇器正確呈現南港→左營的地理順序，選取後查詢行為與 Phase 2 完全一致
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 04-01: 視覺化線路圖車站選擇元件（mobile）
+- [ ] 04-01-PLAN.md — 視覺化線路圖車站選擇元件（mobile）+ QueryForm 響應式整合
 
 ## Progress
 
