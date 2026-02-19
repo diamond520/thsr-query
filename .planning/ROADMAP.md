@@ -108,7 +108,12 @@ Plans:
   2. 已儲存的路線以 chip 形式顯示在查詢表單上方，點擊任一 chip 後表單起訖站自動帶入對應路線
   3. 使用者可刪除任一已儲存路線，chip 即時消失
   4. 重新整理或關閉再開啟瀏覽器後，已儲存的路線仍然存在（localStorage 持久化）
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Types + SSR-safe useLocalStorage hook + useFavorites domain hook
+- [ ] 06-02-PLAN.md — FavoriteRouteChips component + QueryForm save button
+- [ ] 06-03-PLAN.md — page.tsx full wiring + next build verification + human verification
 
 ### Phase 7: Round-Trip Query
 **Goal**: 使用者可在「來回查詢」分頁選擇起訖站、去程日期與回程日期，同時看到兩段班次並排結果
@@ -133,5 +138,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Secondary Queries | 2/2 | Complete | 2026-02-19 |
 | 4. UI Polish | 1/1 | Complete | 2026-02-19 |
 | 5. Shareable URL | 2/2 | Complete    | 2026-02-19 |
-| 6. Saved Favorite Routes | 0/TBD | Not started | - |
+| 6. Saved Favorite Routes | 0/3 | Not started | - |
 | 7. Round-Trip Query | 0/TBD | Not started | - |
