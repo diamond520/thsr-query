@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 7 — Round-Trip Query
-Plan: 1 of 3 complete
+Plan: 2 of 3 complete
 Status: In Progress
-Last activity: 2026-02-19 — 07-01 complete (RoundTripParams type + RoundTripForm component)
+Last activity: 2026-02-19 — 07-02 complete (RoundTripResult component with dual parallel queries)
 
-Progress: [======    ] 71% (v2.0 milestone — 1/3 plans in Phase 7 done)
+Progress: [=======   ] 78% (v2.0 milestone — 2/3 plans in Phase 7 done)
 
 ## Performance Metrics
 
@@ -33,7 +33,7 @@ Progress: [======    ] 71% (v2.0 milestone — 1/3 plans in Phase 7 done)
 | 04-ui-polish | 1/1 | 2 min | 2 min |
 | 05-shareable-url | 2/2 | 2 min | 1 min |
 | 06-saved-favorite-routes | 3/3 | ~18 min | 6 min |
-| 07-round-trip-query | 1/3 | 2 min | 2 min |
+| 07-round-trip-query | 2/3 | 3 min | 1.5 min |
 
 **Recent Trend:**
 - Last 5 plans: 5 min, 4 min, 1 min, 1 min, 2 min
@@ -111,6 +111,9 @@ Recent decisions affecting current work:
 - [Phase 07-01]: fetchStations duplicated in round-trip-form.tsx (not shared with query-form.tsx) — avoids coupling per plan spec
 - [Phase 07-01]: react-day-picker v9 disabled={{ before: outboundDate }} for return Calendar — fromDate/toDate removed in v9
 - [Phase 07-01]: Return date clamp: if (returnDate < d) setReturnDate(d) in handleOutboundDateSelect — prevents invalid state silently
+- [Phase 07-02]: LegDisplay is internal (not exported) — only RoundTripResult is the public API surface
+- [Phase 07-02]: Discriminated queryKey literals ('outbound'/'return') mandatory — without them React Query deduplicates structurally-identical params
+- [Phase 07-02]: Return leg swaps origin/destination AND uses returnDate — both critical correctness requirements
 
 ### Pending Todos
 
@@ -126,5 +129,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 07-01-PLAN.md — RoundTripParams type + RoundTripForm component; Phase 7 plan 1/3 done
+Stopped at: Completed 07-02-PLAN.md — RoundTripResult component with dual parallel queries; Phase 7 plan 2/3 done
 Resume file: None
