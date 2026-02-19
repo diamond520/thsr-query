@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** 使用者能在幾秒內查到自己要搭的那班車有沒有位置。
-**Current focus:** Phase 4 — UI Polish
+**Current focus:** Milestone v2.0 — UX Enhancement
 
 ## Current Position
 
-Phase: 4 of 4 (UI Polish) — COMPLETE
-Plan: 1 of 1 in current phase — COMPLETE
-Status: Phase 4 complete — mobile visual station line picker built and integrated into QueryForm with CSS breakpoint swap
-Last activity: 2026-02-19 — Completed 04-01 (mobile StationLinePicker + QueryForm integration)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements for v2.0
+Last activity: 2026-02-19 — Milestone v2.0 started (來回票 + 常用路線 + 分享連結)
 
-Progress: [██████████] 100%
+Progress: [          ] 0%
 
 ## Performance Metrics
 

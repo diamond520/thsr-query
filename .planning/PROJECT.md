@@ -8,6 +8,15 @@
 
 使用者能在幾秒內查到自己要搭的那班車有沒有位置。
 
+## Current Milestone: v2.0 UX Enhancement
+
+**Goal:** 讓使用者可以一次查詢來回行程、儲存常用路線快速重查，並分享查詢結果給同行者。
+
+**Target features:**
+- 來回票查詢：去程 + 回程各自選日期，並排顯示兩段班次列表
+- 儲存常用路線：以 localStorage 儲存起訖站組合，快速帶入查詢
+- 可分享查詢條件連結：URL 包含起訖站 + 日期，開啟即顯示查詢結果
+
 ## Requirements
 
 ### Validated
@@ -19,15 +28,26 @@
 - ✓ 依車次號查詢時刻 — 現有
 - ✓ 查詢特定車站的可用座位狀態 — 現有
 
-### Active
+### Active (v1.0 — Complete)
 
-<!-- 本次重構目標 -->
+<!-- v1.0 重構目標 — 全部完成 -->
 
-- [ ] 使用 Next.js 重寫整個 app（取代 Vue 2）
-- [ ] 將資料來源從 PTX API 遷移至 TDX API（含 OAuth2 token 認證）
-- [ ] Mobile UI：仿照 t-ex app 風格（現代、卡片式）
-- [ ] Desktop UI：仿照高鐵官網但簡潔化
-- [ ] 查詢結果頁顯示「去訂票」連結（跳至高鐵官網訂票頁）
+- [x] 使用 Next.js 重寫整個 app（取代 Vue 2）
+- [x] 將資料來源從 PTX API 遷移至 TDX API（含 OAuth2 token 認證）
+- [x] Mobile UI：仿照 t-ex app 風格（現代、卡片式）
+- [x] Desktop UI：仿照高鐵官網但簡潔化
+- [x] 查詢結果頁顯示「去訂票」連結（跳至高鐵官網訂票頁）
+- [x] 依車次號查詢停站時刻
+- [x] 依車站查詢北上/南下座位剩餘
+- [x] Mobile 視覺化線路圖車站選擇器
+
+### Active (v2.0 — In Progress)
+
+<!-- v2.0 UX Enhancement -->
+
+- [ ] 來回票查詢：去程 + 回程各自選日期，並排顯示兩段班次
+- [ ] 儲存常用路線：localStorage 起訖站組合，快速帶入
+- [ ] 可分享查詢條件：URL query string 含起訖站 + 日期，開啟即查詢
 
 ### Out of Scope
 
@@ -59,4 +79,4 @@
 | Next.js App Router vs Pages Router | App Router 為 Next.js 13+ 推薦，但新手曲線較陡 | — Pending |
 
 ---
-*Last updated: 2026-02-19 after initialization*
+*Last updated: 2026-02-19 — Milestone v2.0 started (來回票 + 常用路線 + 分享連結)*
