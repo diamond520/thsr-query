@@ -32,6 +32,9 @@ export interface QueryParams {
 
 interface QueryFormProps {
   onSubmit: (params: QueryParams) => void
+  initialOrigin?: string
+  initialDestination?: string
+  initialDate?: string  // YYYY-MM-DD string format
 }
 
 async function fetchStations(): Promise<TdxStation[]> {
@@ -40,11 +43,14 @@ async function fetchStations(): Promise<TdxStation[]> {
   return res.json()
 }
 
-export function QueryForm({ onSubmit }: QueryFormProps) {
-  const [origin, setOrigin] = useState<string>('')
-  const [destination, setDestination] = useState<string>('')
+export function QueryForm({ onSubmit, initialOrigin, initialDestination, initialDate }: QueryFormProps) {
+  const [origin, setOrigin] = useState<string>(initialOrigin ?? '')
+  const [destination, setDestination] = useState<string>(initialDestination ?? '')
   // getTaiwanToday() called inside useState initializer — avoids hydration mismatch
-  const [date, setDate] = useState<Date>(() => getTaiwanToday())
+  // initialDate parsed with explicit T00:00:00 to force local-time interpretation (not UTC midnight)
+  const [date, setDate] = useState<Date>(() =>
+    initialDate ? new Date(initialDate + 'T00:00:00') : getTaiwanToday()
+  )
   const [calendarOpen, setCalendarOpen] = useState(false)
 
   const { data: stations = [], isLoading: stationsLoading } = useQuery({
