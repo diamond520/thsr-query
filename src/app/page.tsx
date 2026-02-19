@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
 import { QueryForm, QueryParams } from '@/components/query-form'
 import { TrainList } from '@/components/train-list'
 import { ByTrainForm } from '@/components/by-train-form'
@@ -11,6 +12,16 @@ import { ByStationResult } from '@/components/by-station-result'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { SearchParamsInit } from '@/components/search-params-init'
 import { ShareButton } from '@/components/share-button'
+import { FavoriteRouteChips } from '@/components/favorite-route-chips'
+import { useFavorites } from '@/hooks/use-favorites'
+import type { FavoriteRoute } from '@/types/favorites'
+import type { TdxStation } from '@/types/tdx'
+
+async function fetchStations(): Promise<TdxStation[]> {
+  const res = await fetch('/api/tdx/stations')
+  if (!res.ok) throw new Error('Failed to load stations')
+  return res.json()
+}
 
 export default function Home() {
   const router = useRouter()
@@ -31,6 +42,16 @@ export default function Home() {
 
   // by-station state
   const [stationId, setStationId] = useState<string | null>(null)
+
+  // Stations for FavoriteRouteChips name resolution (same queryKey as QueryForm — React Query deduplicates)
+  const { data: stations = [] } = useQuery({
+    queryKey: ['stations'],
+    queryFn: fetchStations,
+    staleTime: 24 * 60 * 60 * 1000,  // 24h — same cache config as QueryForm
+  })
+
+  // Favorites state and actions
+  const { favorites, addRoute, removeRoute, isFull } = useFavorites()
 
   // Called once on mount by SearchParamsInit when URL has ?from, ?to, ?date params
   function handleParamInit(from: string | null, to: string | null, date: string | null) {
@@ -56,6 +77,17 @@ export default function Home() {
       date: params.date,
     })
     router.replace(`${pathname}?${urlParams.toString()}`, { scroll: false })
+  }
+
+  // Called when user clicks a favorite chip — fills form fields only, no auto-submit
+  // Per PERS-03: "一鍵帶入查詢表單起訖站" — bring into form, not auto-execute
+  function handleApplyFavorite(route: FavoriteRoute) {
+    setInitialOrigin(route.origin)
+    setInitialDestination(route.destination)
+    // Increment formKey to remount QueryForm — picks up new initialOrigin/Destination props
+    // Same pattern used in handleParamInit for URL-param pre-fill (Phase 5)
+    setFormKey(k => k + 1)
+    // Do NOT auto-submit: user may want to change date before querying
   }
 
   return (
@@ -85,13 +117,20 @@ export default function Home() {
             <TabsTrigger value="by-station">車站查詢</TabsTrigger>
           </TabsList>
 
-          {/* Tab 1: By OD — Phase 5 adds URL wiring + ShareButton */}
+          {/* Tab 1: By OD — Phase 6 adds FavoriteRouteChips above QueryForm */}
           <TabsContent value="by-od">
+            {/* Favorite route chips — renders null when favorites is empty */}
+            <FavoriteRouteChips
+              favorites={favorites}
+              stations={stations}
+              onApply={handleApplyFavorite}
+              onRemove={removeRoute}
+            />
             <div className="mb-6 rounded-lg border bg-card p-4 shadow-sm">
               {/*
-                key={formKey}: when formKey increments (triggered by URL params on load),
-                React unmounts and remounts QueryForm so useState initializers run again
-                with the new initial* props from the URL.
+                key={formKey}: when formKey increments (triggered by URL params on load or
+                chip apply), React unmounts and remounts QueryForm so useState initializers
+                run again with the new initial* props.
               */}
               <QueryForm
                 key={formKey}
@@ -99,6 +138,8 @@ export default function Home() {
                 initialDestination={initialDestination}
                 initialDate={initialDate}
                 onSubmit={handleQuerySubmit}
+                onSave={(origin, destination) => addRoute({ origin, destination })}
+                isFavoriteFull={isFull}
               />
             </div>
             {/* ShareButton renders only when a query has been submitted (queryParams !== null) */}
