@@ -93,7 +93,11 @@ Plans:
   2. 他人開啟含有效 `?from`、`?to`、`?date` 的連結後，查詢表單自動帶入起訖站與日期，並立即執行查詢顯示結果
   3. 使用者可點擊「複製連結」按鈕（或透過 Web Share API）將查詢連結分享給他人
   4. 在 `next build` 生產建置下，頁面可正常載入並執行查詢（Suspense boundary 正確包裝 `useSearchParams`）
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — SearchParamsInit component + QueryForm optional initial* props
+- [ ] 05-02-PLAN.md — ShareButton component + page.tsx full URL wiring + next build verification
 
 ### Phase 6: Saved Favorite Routes
 **Goal**: 使用者可儲存常用起訖站組合，並一鍵帶入查詢表單，資料跨瀏覽器 session 持久化
