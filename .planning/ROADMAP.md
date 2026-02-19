@@ -45,12 +45,13 @@ Plans:
   3. 每一列班次有「去訂票」連結，點擊後跳至高鐵官方訂票頁面
   4. 起訖站可透過交換按鈕一鍵對調，日期選擇使用台灣時區（UTC+8）避免跨夜顯示錯誤
   5. 頁面在手機與桌面瀏覽器均可正常操作，查詢中顯示 loading 狀態，查無資料與錯誤分別有對應提示
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 02-01: Timetable Route Handler（`/api/tdx/timetable`）與座位狀態整合
-- [ ] 02-02: 查詢表單 UI（起訖站選擇、日期輸入、交換按鈕）
-- [ ] 02-03: 結果列表 UI（班次卡片、座位狀態徽章、訂票連結、loading/empty/error 狀態）
+- [ ] 02-01-PLAN.md — Backend data layer: extend types, add MOCK_TRAINS fixture, extend tdx-api.ts, create /api/tdx/trains Route Handler (parallel fetch + server-side join)
+- [ ] 02-02-PLAN.md — Form UI: install shadcn components, taiwan-date utility, SeatBadge, QueryForm with station selects + date picker + swap button
+- [ ] 02-03-PLAN.md — Result UI: TrainCard (mobile), TrainTable (desktop), TrainList with idle/loading/error/empty states
+- [ ] 02-04-PLAN.md — Integration + human verification: wire page.tsx with QueryForm + TrainList, end-to-end UI verification
 
 ### Phase 3: Secondary Queries
 **Goal**: 使用者可透過車次號查詢單一列車停站時刻，亦可查詢特定車站的座位剩餘狀況
@@ -86,6 +87,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-02-19 |
-| 2. Core Query | 0/3 | Not started | - |
+| 2. Core Query | 0/4 | Not started | - |
 | 3. Secondary Queries | 0/2 | Not started | - |
 | 4. UI Polish | 0/1 | Not started | - |
