@@ -1,7 +1,7 @@
 // src/fixtures/tdx-mock.ts
 // Mock data matching real TDX API response format for /Station endpoint
 // Used when TDX_CLIENT_ID / TDX_CLIENT_SECRET env vars are not set
-import type { TdxStation } from '@/types/tdx'
+import type { TdxStation, TdxEnrichedTrain } from '@/types/tdx'
 
 export const MOCK_STATIONS: TdxStation[] = [
   {
@@ -136,4 +136,19 @@ export const MOCK_STATIONS: TdxStation[] = [
     UpdateTime: '2024-01-01T00:00:00+08:00',
     VersionID: 1,
   },
+]
+
+/** Mock enriched train data for /api/tdx/trains in mock mode.
+ *  Covers all three seat status codes across 8 realistic trains (Nangang→Zuoying).
+ *  Train numbers match real THSR format (4-digit, zero-padded).
+ */
+export const MOCK_TRAINS: TdxEnrichedTrain[] = [
+  { trainNo: '0101', departureTime: '06:00', arrivalTime: '07:57', standardSeat: 'O', businessSeat: 'O' },
+  { trainNo: '0103', departureTime: '06:30', arrivalTime: '08:10', standardSeat: 'O', businessSeat: 'O' },
+  { trainNo: '0105', departureTime: '07:00', arrivalTime: '08:52', standardSeat: 'L', businessSeat: 'O' },
+  { trainNo: '0107', departureTime: '08:00', arrivalTime: '09:52', standardSeat: 'L', businessSeat: 'L' },
+  { trainNo: '0109', departureTime: '09:00', arrivalTime: '10:52', standardSeat: 'X', businessSeat: 'L' },
+  { trainNo: '0111', departureTime: '10:00', arrivalTime: '11:52', standardSeat: 'X', businessSeat: 'X' },
+  { trainNo: '0113', departureTime: '12:00', arrivalTime: '13:52', standardSeat: 'O', businessSeat: null },
+  { trainNo: '0115', departureTime: '14:00', arrivalTime: '15:52', standardSeat: 'O', businessSeat: 'O' },
 ]
