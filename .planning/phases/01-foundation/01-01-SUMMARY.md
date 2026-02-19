@@ -96,7 +96,7 @@ Each task was committed atomically:
 1. **Task 1: Archive Vue 2 files and scaffold Next.js 16** - `84ad036` (feat)
 2. **Task 2: Configure root layout with QueryClientProvider and error boundary** - `f1a7338` (feat)
 
-**Plan metadata:** (to be recorded after final commit)
+**Plan metadata:** `94e0c19` (docs: complete plan summary and state update)
 
 ## Files Created/Modified
 - `src/app/providers.tsx` - 'use client' QueryClientProvider wrapper for Server Component layout
