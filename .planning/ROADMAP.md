@@ -61,11 +61,11 @@ Plans:
   1. 使用者輸入車次號後，頁面顯示該列車的完整停站順序與各站到發時刻
   2. 使用者選擇車站後，頁面顯示該站目前可搭乘班次的座位剩餘狀況（北上 / 南下分頁）
   3. 兩種查詢均有 loading、查無資料、API 錯誤的對應畫面
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: By-train Route Handler（`/api/tdx/timetable-by-train`）與 UI
-- [ ] 03-02: By-station Route Handler（`/api/tdx/seat-status`）與 UI
+- [ ] 03-01-PLAN.md — Types/mock/tdx-api extensions + /api/tdx/timetable-by-train Route Handler + ByTrainForm + ByTrainResult
+- [ ] 03-02-PLAN.md — /api/tdx/seat-status Route Handler + ByStationForm + ByStationResult + page.tsx three-tab integration
 
 ### Phase 4: UI Polish
 **Goal**: 視覺化車站選擇器取代下拉選單，整體體驗達到 t-ex app 風格的流暢度與可用性
