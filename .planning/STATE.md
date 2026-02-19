@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 1 of 4 (Foundation)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: Executing
-Last activity: 2026-02-19 — Completed 01-01 (archive Vue 2, scaffold Next.js 16)
+Last activity: 2026-02-19 — Completed 01-02 (TDX credential security layer, mock stations endpoint)
 
-Progress: [█░░░░░░░░░] 8%
+Progress: [██░░░░░░░░] 17%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 8 min
-- Total execution time: 8 min
+- Total plans completed: 2
+- Average duration: 5.5 min
+- Total execution time: 11 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 1/3 | 8 min | 8 min |
+| 01-foundation | 2/3 | 11 min | 5.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 8 min
-- Trend: -
+- Last 5 plans: 8 min, 3 min
+- Trend: faster
 
 *Updated after each plan completion*
 
@@ -48,6 +48,10 @@ Recent decisions affecting current work:
 - [01-01]: git mv used for Vue 2 archival — preserves rename history in git log
 - [01-01]: Tailwind v4 (not v3) — create-next-app@latest auto-selects v4 with @tailwindcss/postcss
 - [01-01]: shadcn/ui New York style, neutral base, CSS variables
+- [01-02]: Mock mode auto-detect via env var presence (no USE_MOCK_TDX flag) — reduces config surface
+- [01-02]: server-only guard on both tdx-token.ts and tdx-api.ts — defense in depth
+- [01-02]: Route Handler never imports tdx-token.ts directly — only via tdx-api.ts abstraction
+- [01-02]: Module-level token cache with 5-minute buffer — balances performance and freshness
 
 ### Pending Todos
 
@@ -62,5 +66,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-01-PLAN.md (Next.js 16 scaffold + layout with QueryClientProvider)
+Stopped at: Completed 01-02-PLAN.md (TDX credential security layer, /api/tdx/stations returning 12 stations)
 Resume file: None

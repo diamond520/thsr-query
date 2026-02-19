@@ -21,9 +21,9 @@
 
 ### TDX API 整合
 
-- [ ] **INTG-01**: 所有對 TDX API 的呼叫透過 Next.js Route Handler proxy，TDX credentials 不暴露於前端
-- [ ] **INTG-02**: TDX OAuth2 token 以 server-side 記憶體快取管理，避免每次 request 重新取得
-- [ ] **INTG-03**: TDX client_id 與 client_secret 以環境變數管理（`.env.local`，不 commit）
+- [x] **INTG-01**: 所有對 TDX API 的呼叫透過 Next.js Route Handler proxy，TDX credentials 不暴露於前端
+- [x] **INTG-02**: TDX OAuth2 token 以 server-side 記憶體快取管理，避免每次 request 重新取得
+- [x] **INTG-03**: TDX client_id 與 client_secret 以環境變數管理（`.env.local`，不 commit）
 
 ### 基礎架構
 
@@ -57,9 +57,9 @@
 |-------------|-------|--------|
 | INFR-01 | Phase 1 | Complete (01-01) |
 | INFR-02 | Phase 1 | Pending |
-| INTG-01 | Phase 1 | Pending |
-| INTG-02 | Phase 1 | Pending |
-| INTG-03 | Phase 1 | Pending |
+| INTG-01 | Phase 1 | Complete |
+| INTG-02 | Phase 1 | Complete |
+| INTG-03 | Phase 1 | Complete |
 | QURY-01 | Phase 2 | Pending |
 | QURY-02 | Phase 2 | Pending |
 | QURY-04 | Phase 2 | Pending |
