@@ -16,8 +16,8 @@
 
 - [ ] **UIUX-01**: 起訖站選擇使用視覺化線路圖（12 個車站顯示為線段上的點，點擊選取）
 - [ ] **UIUX-02**: Mobile-first 響應式設計 — 手機版仿 t-ex app 風格（大點擊區域、卡片式），桌面版仿高鐵官網（清爽、表格式）
-- [ ] **UIUX-03**: 日期選擇使用台灣時區（UTC+8），避免跨夜時顯示錯誤日期
-- [ ] **UIUX-04**: 使用者可快速切換起訖站（交換按鈕）
+- [x] **UIUX-03**: 日期選擇使用台灣時區（UTC+8），避免跨夜時顯示錯誤日期
+- [x] **UIUX-04**: 使用者可快速切換起訖站（交換按鈕）
 
 ### TDX API 整合
 
@@ -64,8 +64,8 @@
 | QURY-02 | Phase 2 | Complete |
 | QURY-04 | Phase 2 | Pending |
 | UIUX-02 | Phase 2 | Pending |
-| UIUX-03 | Phase 2 | Pending |
-| UIUX-04 | Phase 2 | Pending |
+| UIUX-03 | Phase 2 | Complete (02-02) |
+| UIUX-04 | Phase 2 | Complete (02-02) |
 | QURY-03 | Phase 3 | Pending |
 | UIUX-01 | Phase 4 | Pending |
 
@@ -76,4 +76,4 @@
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 — INFR-01 completed by 01-01 (Next.js 16 scaffold)*
+*Last updated: 2026-02-19 — UIUX-03, UIUX-04 completed by 02-02 (QueryForm + taiwan-date utility)*

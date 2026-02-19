@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 2 of 4 (Core Query) — IN PROGRESS
-Plan: 1 of 4 in current phase — COMPLETE
-Status: Phase 2 plan 02-01 complete — data layer ready, unblocks 02-02, 02-03, 02-04
-Last activity: 2026-02-19 — Completed 02-01 (/api/tdx/trains route handler + TdxEnrichedTrain types)
+Plan: 2 of 4 in current phase — COMPLETE
+Status: Phase 2 plan 02-02 complete — QueryForm + SeatBadge + shadcn UI components ready, unblocks 02-03, 02-04
+Last activity: 2026-02-19 — Completed 02-02 (QueryForm + SeatBadge + taiwan-date utility + 6 shadcn components)
 
-Progress: [████░░░░░░] 31%
+Progress: [█████░░░░░] 38%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 4.5 min
-- Total execution time: 19 min
+- Total plans completed: 5
+- Average duration: 4.2 min
+- Total execution time: 22 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 3/3 | 16 min | 5.3 min |
-| 02-core-query | 1/4 | 3 min | 3 min |
+| 02-core-query | 2/4 | 6 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 8 min, 3 min, 5 min, 3 min
+- Last 5 plans: 8 min, 3 min, 5 min, 3 min, 3 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -60,6 +60,9 @@ Recent decisions affecting current work:
 - [02-01]: fetchDailyTrains/fetchSeatStatus have no mock-mode handling — mock short-circuit lives only in route.ts
 - [02-01]: seatMap keyed on TrainNo with timetable as left dataset — AvailableSeatStatusList returns ALL station trains
 - [02-01]: null (not undefined) for absent seat status — enables clean '—' display fallback in UI components
+- [02-02]: initialFocus prop omitted from Calendar — deprecated/removed in react-day-picker v9 API
+- [02-02]: getTaiwanToday() called inside useState() initializer — hydration-safe pattern for all timezone-sensitive defaults
+- [02-02]: SeatBadge null status renders '—' gray badge — train absent from AvailableSeatStatusList is expected, not an error
 
 ### Pending Todos
 
@@ -74,5 +77,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-01-PLAN.md (TDX trains data layer: /api/tdx/trains route handler + TdxEnrichedTrain types + MOCK_TRAINS fixture)
+Stopped at: Completed 02-02-PLAN.md (QueryForm + SeatBadge + taiwan-date utility + 6 shadcn UI components)
 Resume file: None
