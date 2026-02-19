@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** 使用者能在幾秒內查到自己要搭的那班車有沒有位置。
-**Current focus:** Milestone v2.0 — UX Enhancement (Phase 6 of 7)
+**Current focus:** Milestone v2.0 — UX Enhancement (Phase 7 of 7)
 
 ## Current Position
 
-Phase: 6 — Saved Favorite Routes
-Plan: 3 of 3 complete
-Status: Complete
-Last activity: 2026-02-19 — 06-03 complete (page.tsx wired with favorites, all 6 user flows verified)
+Phase: 7 — Round-Trip Query
+Plan: 1 of 3 complete
+Status: In Progress
+Last activity: 2026-02-19 — 07-01 complete (RoundTripParams type + RoundTripForm component)
 
-Progress: [=====     ] 57% (v2.0 milestone — 3/3 plans in Phase 6 done)
+Progress: [======    ] 71% (v2.0 milestone — 1/3 plans in Phase 7 done)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
-- Average duration: 3.6 min
-- Total execution time: 36 min
+- Total plans completed: 11
+- Average duration: 3.5 min
+- Total execution time: 38 min
 
 **By Phase:**
 
@@ -33,9 +33,10 @@ Progress: [=====     ] 57% (v2.0 milestone — 3/3 plans in Phase 6 done)
 | 04-ui-polish | 1/1 | 2 min | 2 min |
 | 05-shareable-url | 2/2 | 2 min | 1 min |
 | 06-saved-favorite-routes | 3/3 | ~18 min | 6 min |
+| 07-round-trip-query | 1/3 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min, 5 min, 4 min, 1 min, 1 min
+- Last 5 plans: 5 min, 4 min, 1 min, 1 min, 2 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -107,6 +108,9 @@ Recent decisions affecting current work:
 - [Phase 06-03]: stations query lifted to page.tsx — React Query shared queryKey=['stations'] deduplicates fetches with QueryForm
 - [Phase 06-03]: handleApplyFavorite does NOT auto-submit — fills form only per PERS-03 spec (user adjusts date before querying)
 - [Phase 06-03]: formKey increment reused for favorite chip apply — same pattern as Phase 5 handleParamInit
+- [Phase 07-01]: fetchStations duplicated in round-trip-form.tsx (not shared with query-form.tsx) — avoids coupling per plan spec
+- [Phase 07-01]: react-day-picker v9 disabled={{ before: outboundDate }} for return Calendar — fromDate/toDate removed in v9
+- [Phase 07-01]: Return date clamp: if (returnDate < d) setReturnDate(d) in handleOutboundDateSelect — prevents invalid state silently
 
 ### Pending Todos
 
@@ -122,5 +126,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 06-03-PLAN.md — page.tsx wired with favorites end-to-end; Phase 6 complete
+Stopped at: Completed 07-01-PLAN.md — RoundTripParams type + RoundTripForm component; Phase 7 plan 1/3 done
 Resume file: None

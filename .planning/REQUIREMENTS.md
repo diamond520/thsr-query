@@ -34,7 +34,7 @@
 
 ### 查詢功能
 
-- [ ] **QURY-05**: 使用者可選擇起訖站、去程日期與回程日期，一次查詢兩段班次（去程與回程各自顯示完整時刻與座位狀態）
+- [x] **QURY-05**: 使用者可選擇起訖站、去程日期與回程日期，一次查詢兩段班次（去程與回程各自顯示完整時刻與座位狀態）
 
 ### 個人化
 
@@ -81,7 +81,7 @@
 | SHAR-01 | Phase 5 (v2.0) | Complete |
 | PERS-01 | Phase 6 (v2.0) | Complete |
 | PERS-03 | Phase 6 (v2.0) | Complete |
-| QURY-05 | Phase 7 (v2.0) | Pending |
+| QURY-05 | Phase 7 (v2.0) | Complete |
 
 **Coverage:**
 - v1 requirements: 13 total — all complete ✓
