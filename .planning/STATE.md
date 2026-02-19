@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 
 ## Current Position
 
-Phase: 2 of 4 (Core Query) — COMPLETE
-Plan: 4 of 4 in current phase — COMPLETE
-Status: Phase 2 complete — Full UI verified end-to-end; QueryForm + TrainList integrated in page.tsx; all 9 human verification tests passed
-Last activity: 2026-02-19 — Completed 02-04 (page.tsx integration + human verification of complete Phase 2 UI)
+Phase: 3 of 4 (Secondary Queries) — IN PROGRESS
+Plan: 1 of 2 in current phase — COMPLETE
+Status: Phase 3 plan 01 complete — ByTrainForm + ByTrainResult components + /api/tdx/timetable-by-train Route Handler built; ready for page.tsx integration in Plan 02
+Last activity: 2026-02-19 — Completed 03-01 (by-train query feature end-to-end)
 
-Progress: [████████░░] 62%
+Progress: [█████████░] 69%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 3.9 min
-- Total execution time: 29 min
+- Total execution time: 33 min
 
 **By Phase:**
 
@@ -29,9 +29,10 @@ Progress: [████████░░] 62%
 |-------|-------|-------|----------|
 | 01-foundation | 3/3 | 16 min | 5.3 min |
 | 02-core-query | 4/4 | 13 min | 3.3 min |
+| 03-secondary-queries | 1/2 | 4 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 5 min, 3 min, 3 min, 2 min, 5 min
+- Last 5 plans: 3 min, 3 min, 2 min, 5 min, 4 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -68,6 +69,9 @@ Recent decisions affecting current work:
 - [02-03]: BOOKING_CODE map duplicated in TrainCard+TrainTable — co-location preferred for 12-entry constant over shared import
 - [02-04]: page.tsx marked 'use client' — simplest correct approach for form-UI page that needs useState; RSC benefits not applicable
 - [02-04]: queryParams state lives in page.tsx directly — no additional wrapper component needed at this scale
+- [03-01]: TdxTrainStop normalization done in route.ts (not tdx-api.ts) — consistent with Phase 2 pattern where tdx-api.ts stays raw TDX shapes only
+- [03-01]: MOCK_TIMETABLE_BY_TRAIN keyed by trainNo string, unknown keys return [] — mirrors real API behavior where missing trainNo yields empty array not error
+- [03-01]: ByTrainResult receives trainNo: string | null (null = idle) — clean state machine without extra boolean flag
 
 ### Pending Todos
 
@@ -82,5 +86,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-04-PLAN.md (page.tsx integration + human verification of complete Phase 2 UI)
+Stopped at: Completed 03-01-PLAN.md (by-train query feature — ByTrainForm, ByTrainResult, /api/tdx/timetable-by-train Route Handler)
 Resume file: None
