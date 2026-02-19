@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { ArrowLeftRight, CalendarIcon, Search } from 'lucide-react'
+import { ArrowLeftRight, CalendarIcon, Search, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -35,6 +35,8 @@ interface QueryFormProps {
   initialOrigin?: string
   initialDestination?: string
   initialDate?: string  // YYYY-MM-DD string format
+  onSave?: (origin: string, destination: string) => void  // called when user saves route
+  isFavoriteFull?: boolean                                 // hide save button when at capacity
 }
 
 async function fetchStations(): Promise<TdxStation[]> {
@@ -43,7 +45,7 @@ async function fetchStations(): Promise<TdxStation[]> {
   return res.json()
 }
 
-export function QueryForm({ onSubmit, initialOrigin, initialDestination, initialDate }: QueryFormProps) {
+export function QueryForm({ onSubmit, initialOrigin, initialDestination, initialDate, onSave, isFavoriteFull }: QueryFormProps) {
   const [origin, setOrigin] = useState<string>(initialOrigin ?? '')
   const [destination, setDestination] = useState<string>(initialDestination ?? '')
   // getTaiwanToday() called inside useState initializer — avoids hydration mismatch
@@ -171,6 +173,20 @@ export function QueryForm({ onSubmit, initialOrigin, initialDestination, initial
         <Search className="mr-2 h-4 w-4" />
         查詢
       </Button>
+
+      {/* Save route button — hidden when at capacity or when no valid OD pair selected */}
+      {onSave && !isFavoriteFull && origin && destination && origin !== destination && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => onSave(origin, destination)}
+          className="w-full"
+        >
+          <Star className="mr-2 h-4 w-4" />
+          儲存路線
+        </Button>
+      )}
     </form>
   )
 }
