@@ -4,6 +4,8 @@
 
 Four phases build from a secure API foundation outward to a fully polished query app. Phase 1 locks in the TDX credential boundary (the one mistake that can't be undone). Phase 2 delivers the primary user flow end-to-end: pick stations, pick date, see trains with seat status, book. Phase 3 adds the two secondary query modes (by train number, by station). Phase 4 polishes the experience with a visual station selector and enhancements that only make sense once the query logic is proven.
 
+Phases 5–7 deliver the v2.0 UX Enhancement milestone: shareable query links, saved favorite routes, and round-trip query. The build order is intentional — URL state infrastructure (Phase 5) is established first because Phase 6 reuses its QueryForm prop extensions, and Phase 7 is entirely additive new files that avoid shared-file conflicts.
+
 ## Phases
 
 **Phase Numbering:**
@@ -16,6 +18,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Core Query** - 完整的「依時間查詢」主流程（時刻表 + 座位狀態 + 訂票連結）
 - [x] **Phase 3: Secondary Queries** - 依車次號查詢、依車站查詢座位剩餘 (completed 2026-02-19)
 - [x] **Phase 4: UI Polish** - 視覺化車站選擇器與漸進式 UX 強化 (completed 2026-02-19)
+- [ ] **Phase 5: Shareable URL** - 查詢條件寫入 URL query string，開啟連結即自動帶入並執行查詢
+- [ ] **Phase 6: Saved Favorite Routes** - localStorage 儲存常用起訖站組合，一鍵帶入查詢
+- [ ] **Phase 7: Round-Trip Query** - 新增「來回查詢」分頁，去回程各自選日期，並排顯示兩段班次
 
 ## Phase Details
 
@@ -79,10 +84,43 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md — 視覺化線路圖車站選擇元件（mobile）+ QueryForm 響應式整合
 
+### Phase 5: Shareable URL
+**Goal**: 使用者提交查詢後，URL 自動更新含起訖站與日期；他人開啟該連結，頁面自動帶入條件並執行查詢
+**Depends on**: Phase 4
+**Requirements**: SHAR-01
+**Success Criteria** (what must be TRUE):
+  1. 使用者提交查詢後，瀏覽器網址列自動更新為 `?from=<StationID>&to=<StationID>&date=<YYYY-MM-DD>` 格式，不觸發頁面重新載入
+  2. 他人開啟含有效 `?from`、`?to`、`?date` 的連結後，查詢表單自動帶入起訖站與日期，並立即執行查詢顯示結果
+  3. 使用者可點擊「複製連結」按鈕（或透過 Web Share API）將查詢連結分享給他人
+  4. 在 `next build` 生產建置下，頁面可正常載入並執行查詢（Suspense boundary 正確包裝 `useSearchParams`）
+**Plans**: TBD
+
+### Phase 6: Saved Favorite Routes
+**Goal**: 使用者可儲存常用起訖站組合，並一鍵帶入查詢表單，資料跨瀏覽器 session 持久化
+**Depends on**: Phase 5
+**Requirements**: PERS-01, PERS-03
+**Success Criteria** (what must be TRUE):
+  1. 使用者在「依時間查詢」分頁選取起訖站後，可點擊「儲存」按鈕將該組合加入常用路線（最多 10 組，已達上限時按鈕隱藏）
+  2. 已儲存的路線以 chip 形式顯示在查詢表單上方，點擊任一 chip 後表單起訖站自動帶入對應路線
+  3. 使用者可刪除任一已儲存路線，chip 即時消失
+  4. 重新整理或關閉再開啟瀏覽器後，已儲存的路線仍然存在（localStorage 持久化）
+**Plans**: TBD
+
+### Phase 7: Round-Trip Query
+**Goal**: 使用者可在「來回查詢」分頁選擇起訖站、去程日期與回程日期，同時看到兩段班次並排結果
+**Depends on**: Phase 6
+**Requirements**: QURY-05
+**Success Criteria** (what must be TRUE):
+  1. 「來回查詢」為獨立的第四分頁，有共用起訖站選擇器及兩個各自獨立的日期選擇器（去程 / 回程）
+  2. 回程日期選擇器自動禁用早於去程日期的日期，避免使用者選到無效組合
+  3. 提交查詢後，去程與回程班次列表同時顯示；手機版上下堆疊、桌面版左右並排（`md:grid-cols-2`）
+  4. 每段班次均顯示完整時刻、行車時間、座位狀態（標準席 / 商務席）及「去訂票」連結，功能與單程查詢一致
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -90,3 +128,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. Core Query | 4/4 | Complete | 2026-02-19 |
 | 3. Secondary Queries | 2/2 | Complete | 2026-02-19 |
 | 4. UI Polish | 1/1 | Complete | 2026-02-19 |
+| 5. Shareable URL | 0/TBD | Not started | - |
+| 6. Saved Favorite Routes | 0/TBD | Not started | - |
+| 7. Round-Trip Query | 0/TBD | Not started | - |

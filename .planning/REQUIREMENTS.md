@@ -78,16 +78,16 @@
 | UIUX-04 | Phase 2 | Complete (02-02) |
 | QURY-03 | Phase 3 | Complete |
 | UIUX-01 | Phase 4 | Complete (04-01) |
-| QURY-05 | Phase 5 (v2.0) | Pending |
+| SHAR-01 | Phase 5 (v2.0) | Pending |
 | PERS-01 | Phase 6 (v2.0) | Pending |
 | PERS-03 | Phase 6 (v2.0) | Pending |
-| SHAR-01 | Phase 5 (v2.0) | Pending |
+| QURY-05 | Phase 7 (v2.0) | Pending |
 
 **Coverage:**
 - v1 requirements: 13 total — all complete ✓
-- v2.0 requirements: 4 total — pending roadmap
+- v2.0 requirements: 4 total — all mapped (Phases 5–7) ✓
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 — v2.0 requirements defined (QURY-05, PERS-01, PERS-03, SHAR-01)*
+*Last updated: 2026-02-19 — v2.0 roadmap created; traceability updated (SHAR-01→Phase 5, PERS-01/PERS-03→Phase 6, QURY-05→Phase 7)*

@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** 使用者能在幾秒內查到自己要搭的那班車有沒有位置。
-**Current focus:** Milestone v2.0 — UX Enhancement
+**Current focus:** Milestone v2.0 — UX Enhancement (Phase 5 of 7)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 5 — Shareable URL
 Plan: —
-Status: Defining requirements for v2.0
-Last activity: 2026-02-19 — Milestone v2.0 started (來回票 + 常用路線 + 分享連結)
+Status: Planning
+Last activity: 2026-02-19 — v2.0 roadmap created (Phases 5–7)
 
-Progress: [          ] 0%
+Progress: [          ] 0% (v2.0 milestone)
 
 ## Performance Metrics
 
@@ -80,6 +80,13 @@ Recent decisions affecting current work:
 - [04-01]: Mobile picker has no swap button — tapping any station when both are selected clears and restarts; swap is desktop-only
 - [04-01]: getStationState is a pure function outside the component — no closure over state, cleaner logic
 - [04-01]: useEffect watches [origin, destination] to reset step to 'origin' when origin is cleared externally (swap-then-continue edge case)
+- [v2.0 roadmap]: Build order Phase 5 → 6 → 7 — URL state infrastructure first, saved routes extend its props, round-trip is additive new files only
+- [v2.0 roadmap]: useSearchParams() isolated in SearchParamsInit child component — always wrapped in Suspense to prevent next build failure
+- [v2.0 roadmap]: localStorage hydrated in useEffect with hydrated flag — prevents SSR hydration mismatch, no suppressHydrationWarning
+- [v2.0 roadmap]: router.replace() for all URL updates (not router.push()) — prevents Back-button history loop
+- [v2.0 roadmap]: Round-trip React Query keys include 'outbound'/'return' discriminator — prevents cache deduplication of two parallel queries
+- [v2.0 roadmap]: Saved routes capped at 10 (not 5) — localStorage trivially small; 5 is too restrictive for commuters with multiple routes
+- [v2.0 roadmap]: Round-trip as new fourth tab (not toggle inside existing tab) — cleaner component separation, clearer user mental model
 
 ### Pending Todos
 
@@ -90,9 +97,10 @@ None.
 - [Phase 1 resolved]: 使用者尚未申請 TDX 帳號 — non-blocking, mock mode works in dev and production
 - [Phase 2]: TDX `AvailableSeatStatusList` 端點是否支援批次查詢一條路線所有班次尚未確認 — 影響 join 策略，於 Phase 3 實作時驗證
 - [Phase 4]: 視覺化車站選擇器為客製元件，無現成函式庫 — 建議 Phase 4 規劃前做設計 spike
+- [Phase 5]: Quick `next build` smoke test required after adding useSearchParams Suspense wiring — failure mode is silent in next dev, only surfaces at build time
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 04-01-PLAN.md (mobile StationLinePicker + QueryForm integration — all Phase 4 complete)
+Stopped at: v2.0 roadmap created — Phases 5–7 defined, ready for Phase 5 planning
 Resume file: None
