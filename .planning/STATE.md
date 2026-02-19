@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** 使用者能在幾秒內查到自己要搭的那班車有沒有位置。
-**Current focus:** Milestone v2.0 — UX Enhancement (Phase 7 of 7)
+**Current focus:** Planning next milestone (v2.0 shipped 2026-02-19)
 
 ## Current Position
 
