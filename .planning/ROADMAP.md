@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Next.js 16 scaffold: archive Vue 2, create-next-app, shadcn/ui, QueryClientProvider layout
+- [x] 01-01-PLAN.md — Next.js 16 scaffold: archive Vue 2, create-next-app, shadcn/ui, QueryClientProvider layout
 - [ ] 01-02-PLAN.md — TDX security layer: types, mock fixtures, server-only token manager, tdx-api helper, /api/tdx/stations Route Handler
 - [ ] 01-03-PLAN.md — Vercel deployment: CLI deploy, credential setup docs, end-to-end human verification
 
@@ -85,7 +85,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/3 | Not started | - |
+| 1. Foundation | 1/3 | In progress | - |
 | 2. Core Query | 0/3 | Not started | - |
 | 3. Secondary Queries | 0/2 | Not started | - |
 | 4. UI Polish | 0/1 | Not started | - |
