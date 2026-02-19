@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 
 ## Current Position
 
-Phase: 3 of 4 (Secondary Queries) — IN PROGRESS
-Plan: 1 of 2 in current phase — COMPLETE
-Status: Phase 3 plan 01 complete — ByTrainForm + ByTrainResult components + /api/tdx/timetable-by-train Route Handler built; ready for page.tsx integration in Plan 02
-Last activity: 2026-02-19 — Completed 03-01 (by-train query feature end-to-end)
+Phase: 3 of 4 (Secondary Queries) — COMPLETE
+Plan: 2 of 2 in current phase — COMPLETE
+Status: Phase 3 complete — all three query modes (by-OD, by-train, by-station) built and integrated into page.tsx with top-level shadcn Tabs
+Last activity: 2026-02-19 — Completed 03-02 (by-station query + three-tab mode integration)
 
-Progress: [█████████░] 69%
+Progress: [█████████░] 75%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: 3.9 min
-- Total execution time: 33 min
+- Total execution time: 35 min
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [█████████░] 69%
 |-------|-------|-------|----------|
 | 01-foundation | 3/3 | 16 min | 5.3 min |
 | 02-core-query | 4/4 | 13 min | 3.3 min |
-| 03-secondary-queries | 1/2 | 4 min | 4 min |
+| 03-secondary-queries | 2/2 | 6 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 3 min, 3 min, 2 min, 5 min, 4 min
+- Last 5 plans: 3 min, 2 min, 5 min, 4 min, 2 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -72,6 +72,9 @@ Recent decisions affecting current work:
 - [03-01]: TdxTrainStop normalization done in route.ts (not tdx-api.ts) — consistent with Phase 2 pattern where tdx-api.ts stays raw TDX shapes only
 - [03-01]: MOCK_TIMETABLE_BY_TRAIN keyed by trainNo string, unknown keys return [] — mirrors real API behavior where missing trainNo yields empty array not error
 - [03-01]: ByTrainResult receives trainNo: string | null (null = idle) — clean state machine without extra boolean flag
+- [03-02]: page.tsx top-level Tabs defaultValue="by-od" — Phase 2 behavior unchanged on load; each tab has independent local state
+- [03-02]: ByStationForm reuses queryKey=['stations'] — shares React Query cache with QueryForm (no duplicate station fetches)
+- [03-02]: TrainSeatRow matches queried stationId against StopStations — correctly shows seat status for the queried station leg
 
 ### Pending Todos
 
@@ -86,5 +89,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 03-01-PLAN.md (by-train query feature — ByTrainForm, ByTrainResult, /api/tdx/timetable-by-train Route Handler)
+Stopped at: Completed 03-02-PLAN.md (by-station query + three-tab mode integration — all Phase 3 complete)
 Resume file: None
