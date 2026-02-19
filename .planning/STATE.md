@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 6 — Saved Favorite Routes
-Plan: 2 of 3 complete
-Status: In progress
-Last activity: 2026-02-19 — 06-02 complete (FavoriteRouteChips + extended QueryForm with save button)
+Plan: 3 of 3 complete
+Status: Complete
+Last activity: 2026-02-19 — 06-03 complete (page.tsx wired with favorites, all 6 user flows verified)
 
-Progress: [====      ] 43% (v2.0 milestone — 2/3 plans in Phase 6 done)
+Progress: [=====     ] 57% (v2.0 milestone — 3/3 plans in Phase 6 done)
 
 ## Performance Metrics
 
@@ -32,7 +32,7 @@ Progress: [====      ] 43% (v2.0 milestone — 2/3 plans in Phase 6 done)
 | 03-secondary-queries | 2/2 | 6 min | 3 min |
 | 04-ui-polish | 1/1 | 2 min | 2 min |
 | 05-shareable-url | 2/2 | 2 min | 1 min |
-| 06-saved-favorite-routes | 2/3 | 3 min | 1.5 min |
+| 06-saved-favorite-routes | 3/3 | ~18 min | 6 min |
 
 **Recent Trend:**
 - Last 5 plans: 2 min, 5 min, 4 min, 1 min, 1 min
@@ -104,6 +104,9 @@ Recent decisions affecting current work:
 - [Phase 06-02]: Save button is hidden (not disabled) when isFull — cleaner UX per spec
 - [Phase 06-02]: onSave is optional prop — QueryForm backward compatible; existing callers need no changes
 - [Phase 06-02]: e.stopPropagation() on delete button inside Badge chip — prevents onApply firing when deleting
+- [Phase 06-03]: stations query lifted to page.tsx — React Query shared queryKey=['stations'] deduplicates fetches with QueryForm
+- [Phase 06-03]: handleApplyFavorite does NOT auto-submit — fills form only per PERS-03 spec (user adjusts date before querying)
+- [Phase 06-03]: formKey increment reused for favorite chip apply — same pattern as Phase 5 handleParamInit
 
 ### Pending Todos
 
@@ -119,5 +122,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 06-02-PLAN.md — FavoriteRouteChips + extended QueryForm with save button; UI layer complete
+Stopped at: Completed 06-03-PLAN.md — page.tsx wired with favorites end-to-end; Phase 6 complete
 Resume file: None
