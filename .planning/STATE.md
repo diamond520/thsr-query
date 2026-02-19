@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** 使用者能在幾秒內查到自己要搭的那班車有沒有位置。
-**Current focus:** Milestone v2.0 — UX Enhancement (Phase 5 of 7)
+**Current focus:** Milestone v2.0 — UX Enhancement (Phase 6 of 7)
 
 ## Current Position
 
-Phase: 5 — Shareable URL
-Plan: 2 of 2 complete
-Status: Complete
-Last activity: 2026-02-19 — 05-02 complete (ShareButton + page.tsx URL wiring, next build passes)
+Phase: 6 — Saved Favorite Routes
+Plan: 1 of 3 complete
+Status: In progress
+Last activity: 2026-02-19 — 06-01 complete (FavoriteRoute type + useLocalStorage hook + useFavorites hook)
 
-Progress: [==        ] 20% (v2.0 milestone — 2/2 plans in Phase 5 done)
+Progress: [===       ] 30% (v2.0 milestone — 1/3 plans in Phase 6 done)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: 3.9 min
-- Total execution time: 35 min
+- Total plans completed: 10
+- Average duration: 3.6 min
+- Total execution time: 36 min
 
 **By Phase:**
 
@@ -31,11 +31,11 @@ Progress: [==        ] 20% (v2.0 milestone — 2/2 plans in Phase 5 done)
 | 02-core-query | 4/4 | 13 min | 3.3 min |
 | 03-secondary-queries | 2/2 | 6 min | 3 min |
 | 04-ui-polish | 1/1 | 2 min | 2 min |
-
 | 05-shareable-url | 2/2 | 2 min | 1 min |
+| 06-saved-favorite-routes | 1/3 | 1 min | 1 min |
 
 **Recent Trend:**
-- Last 5 plans: 3 min, 2 min, 5 min, 4 min, 1 min
+- Last 5 plans: 2 min, 5 min, 4 min, 1 min, 1 min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -97,6 +97,10 @@ Recent decisions affecting current work:
 - [Phase 05-02]: formKey increment pattern — only correct way to reset useState from new props; fires once on URL-param mount
 - [Phase 05-02]: navigator.canShare({ url }) guard before navigator.share() — prevents runtime TypeError on browsers that expose share but not URL sharing
 - [Phase 05-02]: auto-execute query when all three URL params present — open link → immediate results without manual submit
+- [Phase 06-01]: Store only StationID strings in localStorage (not full TdxStation objects) — prevents bloat and stale data
+- [Phase 06-01]: firstLoadDone flag prevents write effect from overwriting localStorage before read effect fires on mount
+- [Phase 06-01]: addRoute uses functional updater form (prev =>) — reads latest state correctly with batched React updates
+- [Phase 06-01]: Silently skip duplicates and silently block at FAVORITES_MAX=10 — no error or toast per spec
 
 ### Pending Todos
 
@@ -112,5 +116,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 05-02-PLAN.md — ShareButton + page.tsx URL wiring complete; Phase 5 done; next build passes
+Stopped at: Completed 06-01-PLAN.md — FavoriteRoute type + useLocalStorage hook + useFavorites hook; data layer complete
 Resume file: None
